@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="SIGLATA">
+  <!-- The régua, which is the mark: three rules of 4, 3 and 1, heavy to light,
+       opening a document (docs/05-design-system/space-and-layout.md §4). Ink on
+       paper, because the system has no second colour that is not a refusal. -->
+  <rect width="32" height="32" fill="#FBFAF7" />
+  <rect x="5" y="9" width="22" height="4" fill="#0B0E10" />
+  <rect x="5" y="16" width="22" height="3" fill="#0B0E10" />
+  <rect x="5" y="22" width="22" height="1" fill="#0B0E10" />
+</svg>

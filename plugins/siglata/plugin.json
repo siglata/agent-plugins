@@ -1,0 +1,14 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "siglata",
+  "version": "1.0.0",
+  "description": "SIGLATA file management through the remote MCP server, with a Rust CLI fallback: upload, list, retrieve a capability download URL, and soft-delete.",
+  "author": {
+    "name": "SIGLATA",
+    "url": "https://siglata.com"
+  },
+  "homepage": "https://siglata.com",
+  "repository": "https://github.com/birbprophet/siglata",
+  "license": "UNLICENSED",
+  "keywords": ["siglata", "files", "cli"]
+}

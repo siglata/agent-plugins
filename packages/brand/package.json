@@ -1,0 +1,35 @@
+{
+  "name": "brand",
+  "version": "0.0.0",
+  "description": "The SIGLATA marks and their machine-readable asset register.",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "app-icon",
+    "favicon",
+    "manifest.ts",
+    "social",
+    "symbol",
+    "USAGE.md",
+    "wordmark"
+  ],
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "vp pack",
+    "dev": "vp pack --watch",
+    "test": "vp test",
+    "check": "vp check"
+  },
+  "devDependencies": {
+    "@effect/platform-node": "4.0.0-rc.110",
+    "@effect/vitest": "4.0.0-rc.110",
+    "@types/node": "26.2.0",
+    "effect": "4.0.0-rc.110",
+    "typescript": "7.0.2",
+    "vite-plus": "0.2.9"
+  }
+}

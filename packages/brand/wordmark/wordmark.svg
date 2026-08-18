@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="24" viewBox="0 0 128 24" role="img" aria-label="SIGLATA">
+  <!-- The live /install template supplies this exact text, 16px size, 600 weight,
+       -0.01em tracking and 24px line height. The prose face is now Inter. -->
+  <!-- A colour lockup uses --brand, which resolves to --teal-9 (#0b625f). -->
+  <style>
+    :root { --brand: #0b625f; }
+    text {
+      fill: var(--brand);
+      font-family: Inter, sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.16px;
+    }
+  </style>
+  <text x="0" y="18">⊢ SIGLATA</text>
+</svg>
