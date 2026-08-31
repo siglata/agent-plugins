@@ -1,6 +1,7 @@
 {
   "name": "brand",
   "version": "0.0.0",
+  "packageManager": "bun@1.4.0",
   "description": "The SIGLATA marks and their machine-readable asset register.",
   "license": "MIT",
   "files": [
