@@ -34,7 +34,6 @@ jobs:
           repository: siglata/siglata
           ref: ${{ inputs.source_ref || github.event.client_payload.source_ref || 'main' }}
           path: .source
-          token: ${{ secrets.SIGLATA_SOURCE_TOKEN }}
           fetch-depth: 1
 
       - name: Set up Vite+
