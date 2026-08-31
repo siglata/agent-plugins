@@ -1,0 +1,60 @@
+name: Publish Agent Plugins marketplace
+
+on:
+  repository_dispatch:
+    types:
+      - publish-marketplace
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        description: Source repository ref to publish
+        required: false
+        default: main
+        type: string
+
+concurrency:
+  group: publish-agent-plugins
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out marketplace
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Check out authoritative source
+        uses: actions/checkout@v5
+        with:
+          repository: siglata/siglata
+          ref: ${{ inputs.source_ref || github.event.client_payload.source_ref || 'main' }}
+          path: .source
+          token: ${{ secrets.SIGLATA_SOURCE_TOKEN }}
+          fetch-depth: 1
+
+      - name: Set up Vite+
+        uses: voidzero-dev/setup-vp@v1.18.0
+        with:
+          cache: true
+
+      - name: Install source dependencies
+        working-directory: .source
+        run: vp install --frozen-lockfile
+
+      - name: Regenerate source catalogue
+        working-directory: .source
+        run: vp run generate-catalogue
+
+      - name: Refuse a dirty checkout
+        run: git diff --exit-code
+
+      - name: Regenerate marketplace output
+        run: bun scripts/regenerate-marketplace.mjs --source .source --destination .
+
+      - name: Refuse generated drift
+        run: git diff --exit-code -- .agents/plugins plugins/siglata

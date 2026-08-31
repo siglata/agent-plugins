@@ -1,24 +1,19 @@
 {
   "name": "siglata",
-  "version": "1.0.0",
-  "description": "SIGLATA file management through the remote MCP server, with a Rust CLI fallback: upload, list, retrieve a capability download URL, and soft-delete.",
-  "author": {
-    "name": "SIGLATA",
-    "url": "https://siglata.com"
-  },
-  "homepage": "https://siglata.com",
-  "repository": "https://github.com/birbprophet/siglata",
-  "license": "UNLICENSED",
-  "keywords": ["siglata", "files", "cli"],
   "skills": "./skills/",
   "mcpServers": "./mcp.json",
   "interface": {
-    "displayName": "SIGLATA",
-    "shortDescription": "File management through remote MCP",
-    "longDescription": "Teaches an agent to use the SIGLATA remote MCP tools for Organization files, with the Rust CLI as a local fallback. Upload, list, retrieve a capability download URL, and soft-delete.",
-    "developerName": "SIGLATA",
+    "displayName": "Siglata",
+    "shortDescription": "Manage files through the hosted MCP server",
+    "longDescription": "Use Siglata from Codex 0.147 or newer to manage Organization files through the hosted Streamable HTTP MCP server.",
+    "developerName": "Siglata",
     "category": "Productivity",
     "capabilities": ["Read", "Write"],
-    "websiteURL": "https://siglata.com"
+    "websiteURL": "https://siglata.com",
+    "defaultPrompt": [
+      "List files in my current organization.",
+      "Upload this file to Siglata.",
+      "Find and restore a file in Siglata."
+    ]
   }
 }

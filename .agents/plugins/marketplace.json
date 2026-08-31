@@ -1,7 +1,7 @@
 {
   "name": "siglata",
   "interface": {
-    "displayName": "SIGLATA"
+    "displayName": "Siglata"
   },
   "plugins": [
     {
@@ -11,7 +11,7 @@
         "path": "./plugins/siglata"
       },
       "policy": {
-        "installation": "INSTALLED_BY_DEFAULT",
+        "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
       "category": "Productivity"
