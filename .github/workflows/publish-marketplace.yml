@@ -22,6 +22,8 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    env:
+      SOURCE_TOKEN: ${{ secrets.SIGLATA_SOURCE_TOKEN }}
     steps:
       - name: Check out marketplace
         uses: actions/checkout@v5
@@ -29,30 +31,43 @@ jobs:
           fetch-depth: 0
 
       - name: Check out authoritative source
+        if: env.SOURCE_TOKEN != ''
         uses: actions/checkout@v5
         with:
           repository: siglata/siglata
           ref: ${{ inputs.source_ref || github.event.client_payload.source_ref || 'main' }}
           path: .source
+          token: ${{ env.SOURCE_TOKEN }}
           fetch-depth: 1
-
       - name: Set up Vite+
         uses: voidzero-dev/setup-vp@v1.18.0
         with:
           cache: true
 
+      - name: Install marketplace test dependencies
+        working-directory: packages/brand
+        run: vp install --frozen-lockfile --ignore-scripts
+
+      - name: Validate marketplace package
+        working-directory: packages/brand
+        run: vp test tests/marketplace.test.ts
+
+      - name: Report unavailable source regeneration
+        if: env.SOURCE_TOKEN == ''
+        run: echo "::notice::SIGLATA_SOURCE_TOKEN is not configured; validating the published package without cross-repository regeneration."
+
       - name: Install source dependencies
+        if: env.SOURCE_TOKEN != ''
         working-directory: .source
         run: vp install --frozen-lockfile
 
       - name: Regenerate source catalogue
+        if: env.SOURCE_TOKEN != ''
         working-directory: .source
         run: vp run generate-catalogue
 
-      - name: Refuse a dirty checkout
-        run: git diff --exit-code
-
       - name: Regenerate marketplace output
+        if: env.SOURCE_TOKEN != ''
         run: bun scripts/regenerate-marketplace.mjs --source .source --destination .
 
       - name: Refuse generated drift

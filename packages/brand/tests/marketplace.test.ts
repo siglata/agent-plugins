@@ -218,6 +218,10 @@ describe("Agent Plugins marketplace", () => {
     Effect.gen(function* checkWorkflow() {
       const workflow = yield* readFile(".github/workflows/publish-marketplace.yml");
       strictEqual(workflow.includes("vp install --frozen-lockfile"), true);
+      strictEqual(workflow.includes("vp test tests/marketplace.test.ts"), true);
+      strictEqual(workflow.includes("if: env.SOURCE_TOKEN != ''"), true);
+      strictEqual(workflow.includes("if: env.SOURCE_TOKEN == ''"), true);
+      strictEqual(workflow.includes("token: ${{ env.SOURCE_TOKEN }}"), true);
       strictEqual(workflow.includes("vp run generate-catalogue"), true);
       strictEqual(
         workflow.includes(
