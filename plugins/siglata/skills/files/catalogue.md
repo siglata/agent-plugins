@@ -1,7 +1,46 @@
 # Siglata catalogue
 
 Catalogue API version: 1
-Catalogue revision: 0b483402220bec33fd7ca890b84402de11263ccda292f071c6dc9205bd5f71fc
+Catalogue revision: f2951d36c6263821f11424716f2d14838c94c3aeb15132b8474e1e0a92a5c5e6
+
+## Writing a script
+
+`search` and `execute` take a `script`. The tool descriptions carry the language card below.
+
+```
+## callscript
+
+You act by sending ONE short script of tool calls, written as plain
+JavaScript. It is parsed and validated - NEVER executed as JS: only
+mounted tools can run, every issue is reported at once before anything
+runs, and all fan-outs are bounded.
+
+// close stale issues                                  <- first comment = intent
+const issues = await repo.listIssues({ name: "api" });     // call a tool
+const stale = issues.filter(i => i.stale);                 // derive a value (pure expression)
+if (stale.length === 0) return { closed: 0 };              // guard: end the run early
+const closed = await Promise.all(                          // fan out, bounded by the slice
+  stale.slice(0, 10).map(i => repo.closeIssue({ name: "api", number: i.number })));
+return { count: closed.length };                           // last statement = the run's output
+
+More forms:
+  const [a, b] = await Promise.all([x.one({}), y.two({})]); // independent calls run concurrently
+  try { await repo.closeIssue({ ... }) }                    // without try/catch, a failed call
+  catch (e) { await chat.post({ text: e.message }); }       //   fails the run; e = { message, code }
+  const job = svc.export({ ... });   // no await: fire-and-forget; a LATER script joins it: await job
+  await x.del({ id }, { reason: "why", suspend: true });    // per-call options: reason, suspend
+                                                            //   (ask a human first), onError: "skip"
+
+Rules:
+- const only, single assignment; no while/for(;;), function, class, or import -
+  fan out with .map over a bounded list
+- awaited calls run in statement order; Promise.all runs them concurrently
+- expressions are pure JS (arrows, ternaries, template literals, ?.) - no new,
+  no regex; globals: Math, JSON, Object, Array, Number, String, Boolean, Base64
+- `input` holds per-run data (auth codes, approvals) when a run is re-executed
+- limits: 50 steps, 50 calls per fan-out, 50 calls total per script
+- Date is not available: a plan must apply exactly as it was planned
+```
 
 ## catalogue.describe
 
@@ -241,7 +280,7 @@ Catalogue revision: 0b483402220bec33fd7ca890b84402de11263ccda292f071c6dc9205bd5f
 
 - Kind: write
 - Role: admin
-- Summary: Invite an email address to the Organization with an inherited role.
+- Summary: Invite an email address to the Organization with an inherited role. Prepare only: the change waits for a human to confirm it in the app.
 
 ### Input schema
 
@@ -252,7 +291,7 @@ Catalogue revision: 0b483402220bec33fd7ca890b84402de11263ccda292f071c6dc9205bd5f
 ### Output schema
 
 ```json
-{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"invitationId":{"type":"string","minLength":1}},"required":["invitationId"],"additionalProperties":false},"definitions":{}}
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"expiresAt":{"type":"string"},"pendingChangeId":{"type":"string","minLength":1},"status":{"anyOf":[{"type":"string","enum":["awaiting_confirmation"]}]}},"required":["expiresAt","pendingChangeId","status"],"additionalProperties":false},"definitions":{}}
 ```
 
 ## members.list
@@ -277,7 +316,7 @@ Catalogue revision: 0b483402220bec33fd7ca890b84402de11263ccda292f071c6dc9205bd5f
 
 - Kind: write
 - Role: admin
-- Summary: Set the inherited role of one member, keeping the last Owner.
+- Summary: Set the inherited role of one member, keeping the last Owner. Prepare only: the change waits for a human to confirm it in the app.
 
 ### Input schema
 
@@ -288,14 +327,14 @@ Catalogue revision: 0b483402220bec33fd7ca890b84402de11263ccda292f071c6dc9205bd5f
 ### Output schema
 
 ```json
-{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"members":{"type":"array","items":{"type":"object","properties":{"role":{"type":"string","enum":["owner","admin","member"]},"userId":{"type":"string","minLength":1}},"required":["role","userId"],"additionalProperties":false}}},"required":["members"],"additionalProperties":false},"definitions":{}}
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"expiresAt":{"type":"string"},"pendingChangeId":{"type":"string","minLength":1},"status":{"anyOf":[{"type":"string","enum":["awaiting_confirmation"]}]}},"required":["expiresAt","pendingChangeId","status"],"additionalProperties":false},"definitions":{}}
 ```
 
 ## members.remove
 
 - Kind: write
 - Role: admin
-- Summary: Remove one member from the Organization, keeping the last Owner.
+- Summary: Remove one member from the Organization, keeping the last Owner. Prepare only: the change waits for a human to confirm it in the app.
 
 ### Input schema
 
@@ -306,14 +345,14 @@ Catalogue revision: 0b483402220bec33fd7ca890b84402de11263ccda292f071c6dc9205bd5f
 ### Output schema
 
 ```json
-{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"members":{"type":"array","items":{"type":"object","properties":{"role":{"type":"string","enum":["owner","admin","member"]},"userId":{"type":"string","minLength":1}},"required":["role","userId"],"additionalProperties":false}}},"required":["members"],"additionalProperties":false},"definitions":{}}
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"expiresAt":{"type":"string"},"pendingChangeId":{"type":"string","minLength":1},"status":{"anyOf":[{"type":"string","enum":["awaiting_confirmation"]}]}},"required":["expiresAt","pendingChangeId","status"],"additionalProperties":false},"definitions":{}}
 ```
 
 ## members.cancelInvitation
 
 - Kind: write
 - Role: admin
-- Summary: Cancel a pending invitation.
+- Summary: Cancel a pending invitation. Prepare only: the change waits for a human to confirm it in the app.
 
 ### Input schema
 
@@ -324,7 +363,7 @@ Catalogue revision: 0b483402220bec33fd7ca890b84402de11263ccda292f071c6dc9205bd5f
 ### Output schema
 
 ```json
-{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"invitationId":{"type":"string","minLength":1}},"required":["invitationId"],"additionalProperties":false},"definitions":{}}
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"expiresAt":{"type":"string"},"pendingChangeId":{"type":"string","minLength":1},"status":{"anyOf":[{"type":"string","enum":["awaiting_confirmation"]}]}},"required":["expiresAt","pendingChangeId","status"],"additionalProperties":false},"definitions":{}}
 ```
 
 ## members.resendInvitation

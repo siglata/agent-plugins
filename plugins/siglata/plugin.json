@@ -5,10 +5,10 @@
   "description": "Manage Siglata Organization files through the hosted MCP server.",
   "author": {
     "name": "Siglata",
-    "url": "https://siglata.com"
+    "url": "https://www.siglata.com"
   },
-  "homepage": "https://siglata.com",
+  "homepage": "https://www.siglata.com",
   "repository": "https://github.com/siglata/agent-plugins",
   "license": "Apache-2.0",
-  "keywords": ["siglata", "files", "mcp"]
+  "keywords": ["siglata", "files", "spreadsheets", "mcp"]
 }
