@@ -44,6 +44,6 @@ Let the server validate operation arguments and report its stable error code rat
 
 To provision the first server-owned file, send the bytes to `POST /mcp/files/stage` through the same authenticated MCP connection, with a supported `Content-Type` and an `X-File-Name` header. The response contains `file_id` and `revision_id`; pass those fields in the attachment entry on the next planned script.
 
-Attachment entries identify bytes already staged in the caller's Organization. Use the `file_id` returned by the staging boundary or a Siglata file operation and include `revision_id` when a specific immutable revision is required. The server reads the staged revision through the caller-scoped Files service, verifies its digest, media type and size, and binds it to the script.
+Attachment entries identify bytes already stored in the caller's Organization. Use the `file_id` returned by the staging boundary or a Siglata file operation and include `revision_id` when a specific immutable revision is required. The server reads the stored revision through the caller-scoped Files service, verifies its digest, media type and size, and binds it to the script.
 
 Never put a `download_url`, arbitrary URL, or host-provided metadata in an attachment entry. The staging boundary accepts only the supported media type and display name needed to create the server-owned file.
