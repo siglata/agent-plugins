@@ -10,4 +10,4 @@ The publisher owns exactly these paths and rewrites every one of them on every r
 - `.agents`
 - `README.md`
 
-Source commit: `8e207ef1e4d6aecb789cf097471b558af51f1343`
+Source commit: `39200bd0555e17a86ed9799bc0d9ec16275e7475`
