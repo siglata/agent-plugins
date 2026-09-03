@@ -3,7 +3,7 @@
   "mcpServers": {
     "siglata": {
       "type": "streamable-http",
-      "url": "https://www.siglata.com/mcp"
+      "url": "https://www.siglata.com/v1/mcp"
     }
   }
 }
