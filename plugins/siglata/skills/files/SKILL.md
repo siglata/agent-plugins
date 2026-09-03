@@ -22,7 +22,7 @@ Both `search` and `execute` take a `script`: a short JavaScript program that cal
 - Fan out over a bounded list with `Promise.all(items.slice(0, 10).map(item => files.trash({ file: item.id })))`. The visible `slice` is the bound; an unbounded fan-out is refused.
 - End early with `if (stale.length === 0) return { trashed: 0 };` and return the run's result as the last statement.
 - `Date` is not available; a plan must apply exactly as it was planned.
-- Attached bytes are bound as `attachments` and referenced by index, for example `attachments[0]`.
+- Attached bytes are bound as `attachments` and referenced by index, for example `attachments[0]`. Each attachment must identify a server-owned File with `file_id` and may pin a `revision_id`. The connected client stages the bytes in Siglata before invoking the script.
 
 The server enforces the budget: at most 50 calls per script, arguments of at most 64 KiB per call, 20 attachments per call.
 
@@ -40,12 +40,10 @@ Let the server validate operation arguments and report its stable error code rat
 
 `operations.md` beside this file lists every operation, its kind, the role it needs, and its input and output schemas. Read it when you need an operation name or an argument shape. It is generated from the live operation registry, so it is the authority; do not restate its schemas here.
 
-## Attached bytes transit OpenAI first
+## Attachment references
 
-A file the person drops into ChatGPT is uploaded to OpenAI file storage before Siglata ever sees it. Codex rewrites the path into a `download_url`, Siglata fetches those bytes, verifies the SHA-256, the sniffed container and the size, and only then stores them in Siglata. Tell the person this when they ask where their file went, and never claim the file went straight from their machine to Siglata.
+To provision the first server-owned file, send the bytes to `POST /mcp/files/stage` through the same authenticated MCP connection, with a supported `Content-Type` and an `X-File-Name` header. The response contains `file_id` and `revision_id`; pass those fields in the attachment entry on the next planned script.
 
-On a client without a file bridge, such as Claude Code or Claude Desktop, the attachments array stays empty: work with files already in the Organization instead of sending local bytes.
+Attachment entries identify bytes already staged in the caller's Organization. Use the `file_id` returned by the staging boundary or a Siglata file operation and include `revision_id` when a specific immutable revision is required. The server reads the staged revision through the caller-scoped Files service, verifies its digest, media type and size, and binds it to the script.
 
-## Download URLs are secrets
-
-A download URL is a capability. Pass it straight to the downloader that asked for it. Never print it, echo it back, or store it anywhere the person can read it.
+Never put a `download_url`, arbitrary URL, or host-provided metadata in an attachment entry. The staging boundary accepts only the supported media type and display name needed to create the server-owned file.
