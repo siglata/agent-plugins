@@ -2,7 +2,7 @@
 name: files
 description: Read, search and change Siglata Organization files through the hosted Siglata MCP server, planning every mutation before applying it.
 license: Apache-2.0
-compatibility: Any client that loads Agent Plugins 1.0.0 and speaks Streamable HTTP MCP. Verified against Codex 0.146 or newer with an authorized Siglata connection.
+compatibility: Any client that loads Agent Plugins 1.0.0 and speaks Streamable HTTP MCP. Verified against Codex 0.146 or newer with an authorized Siglata connection. Claude Code registers the same endpoint with `claude mcp add --transport http`; Claude Desktop reaches it through an `mcp-remote` entry in `claude_desktop_config.json`; both sign in through the client's OAuth flow.
 ---
 
 # Siglata files
@@ -43,6 +43,8 @@ Let the server validate operation arguments and report its stable error code rat
 ## Attached bytes transit OpenAI first
 
 A file the person drops into ChatGPT is uploaded to OpenAI file storage before Siglata ever sees it. Codex rewrites the path into a `download_url`, Siglata fetches those bytes, verifies the SHA-256, the sniffed container and the size, and only then stores them in Siglata. Tell the person this when they ask where their file went, and never claim the file went straight from their machine to Siglata.
+
+On a client without a file bridge, such as Claude Code or Claude Desktop, the attachments array stays empty: work with files already in the Organization instead of sending local bytes.
 
 ## Download URLs are secrets
 
