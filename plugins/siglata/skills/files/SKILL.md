@@ -11,11 +11,11 @@ Every file action goes through the connected Siglata MCP server. Do not substitu
 
 ## Start with context
 
-Call `context` first. It reports the active Organization, the caller's role, the catalogue API version and the current limits. Confirm the Organization and the role before reading or changing anything.
+Call `context` first. It reports the active Organization, the caller's role, the operation registry API version and the current limits. Confirm the Organization and the role before reading or changing anything.
 
 ## Write one script per intent
 
-Both `search` and `execute` take a `script`: a short JavaScript program that calls catalogue operations, written the way the tool description shows. The server parses it into an inert plan and never runs it as code. Only catalogue operations execute. Every problem in the script is reported at once, before anything runs, with the spelling that fixes it.
+Both `search` and `execute` take a `script`: a short JavaScript program that calls operations, written the way the tool description shows. The server parses it into an inert plan and never runs it as code. Only registered operations execute. Every problem in the script is reported at once, before anything runs, with the spelling that fixes it.
 
 - Call an operation with `await`, for example `const page = await files.list({ limit: 20 });`.
 - Derive values between calls with plain expressions: `const stale = page.files.filter(f => f.tags.includes("draft"));`.
@@ -38,11 +38,11 @@ Let the server validate operation arguments and report its stable error code rat
 
 ## Operation reference
 
-`catalogue.md` beside this file lists every operation, its kind, the role it needs, and its input and output schemas. Read it when you need an operation name or an argument shape. It is generated from the live registry, so it is the authority; do not restate its schemas here.
+`operations.md` beside this file lists every operation, its kind, the role it needs, and its input and output schemas. Read it when you need an operation name or an argument shape. It is generated from the live operation registry, so it is the authority; do not restate its schemas here.
 
 ## Attached bytes transit OpenAI first
 
-A file the person drops into ChatGPT is uploaded to OpenAI file storage before Siglata ever sees it. Codex rewrites the path into a `download_url`, Siglata fetches those bytes, verifies the SHA-256, the sniffed container and the size, and only then stores them in the vault. Tell the person this when they ask where their file went, and never claim the file went straight from their machine to Siglata.
+A file the person drops into ChatGPT is uploaded to OpenAI file storage before Siglata ever sees it. Codex rewrites the path into a `download_url`, Siglata fetches those bytes, verifies the SHA-256, the sniffed container and the size, and only then stores them in Siglata. Tell the person this when they ask where their file went, and never claim the file went straight from their machine to Siglata.
 
 ## Download URLs are secrets
 

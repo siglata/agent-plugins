@@ -1,6 +1,6 @@
 # Siglata Agent Plugins
 
-This repository is a generated public mirror of the Agent Plugins package from [siglata/siglata](https://github.com/siglata/siglata).
+This repository is a generated public repository of the Agent Plugins package from [siglata/siglata](https://github.com/siglata/siglata).
 The private source repository is authoritative and this tree is written from it, file for file.
 Pull requests are not accepted here. Submit changes to the private source repository.
 
@@ -10,4 +10,4 @@ The publisher owns exactly these paths and rewrites every one of them on every r
 - `.agents`
 - `README.md`
 
-Source commit: `bfcb39f93ebf7eb76a00693a78c85084ac6da7c9`
+Source commit: `b70be2ff11fd56712d67bf43dd2764cbbcdbb8fc`

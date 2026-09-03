@@ -1,7 +1,7 @@
-# Siglata catalogue
+# Siglata operation registry
 
-Catalogue API version: 1
-Catalogue revision: f2951d36c6263821f11424716f2d14838c94c3aeb15132b8474e1e0a92a5c5e6
+Operation registry API version: 2
+Operation registry revision: 6ba7b2ff7912975e85b0ca505c6ba956554e7be81e6c564c7319d602f6909e29
 
 ## Writing a script
 
@@ -42,29 +42,29 @@ Rules:
 - Date is not available: a plan must apply exactly as it was planned
 ```
 
-## catalogue.describe
+## operations.describe
 
 - Kind: read
 - Role: member
-- Summary: Return the JSON Schema of one catalogue operation on demand.
+- Summary: Return the JSON Schema of one operation registry entry on demand.
 
 ### Input schema
 
 ```json
-{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"op":{"type":"string","enum":["catalogue.describe","files.create","files.addRevision","files.list","files.search","files.download","files.move","files.setTags","files.trash","files.restore","files.purge","folders.create","folders.list","members.invite","members.list","members.setRole","members.remove","members.cancelInvitation","members.resendInvitation","audit.list"]}},"required":["op"],"additionalProperties":false},"definitions":{}}
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"op":{"type":"string","enum":["operations.describe","files.create","files.addRevision","files.list","files.search","files.download","files.move","files.setTags","files.trash","files.restore","files.purge","folders.create","folders.list","folders.trash","folders.restore","folders.purge","orgs.close","orgs.reopen","members.invite","members.list","members.setRole","members.setUsername","members.remove","members.cancelInvitation","members.resendInvitation","audit.list"]}},"required":["op"],"additionalProperties":false},"definitions":{}}
 ```
 
 ### Output schema
 
 ```json
-{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"inputSchema":{},"kind":{"type":"string","enum":["read","write"]},"name":{"type":"string","enum":["catalogue.describe","files.create","files.addRevision","files.list","files.search","files.download","files.move","files.setTags","files.trash","files.restore","files.purge","folders.create","folders.list","members.invite","members.list","members.setRole","members.remove","members.cancelInvitation","members.resendInvitation","audit.list"]},"outputSchema":{},"role":{"type":"string","enum":["admin","member"]},"summary":{"type":"string"}},"required":["inputSchema","kind","name","outputSchema","role","summary"],"additionalProperties":false},"definitions":{}}
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"inputSchema":{},"kind":{"type":"string","enum":["read","write"]},"name":{"type":"string","enum":["operations.describe","files.create","files.addRevision","files.list","files.search","files.download","files.move","files.setTags","files.trash","files.restore","files.purge","folders.create","folders.list","folders.trash","folders.restore","folders.purge","orgs.close","orgs.reopen","members.invite","members.list","members.setRole","members.setUsername","members.remove","members.cancelInvitation","members.resendInvitation","audit.list"]},"outputSchema":{},"role":{"type":"string","enum":["admin","member","owner"]},"summary":{"type":"string"}},"required":["inputSchema","kind","name","outputSchema","role","summary"],"additionalProperties":false},"definitions":{}}
 ```
 
 ## files.create
 
 - Kind: write
 - Role: member
-- Summary: Create a file from bytes already staged in the vault under their sha256.
+- Summary: Create a file from bytes already prepared in content storage under their sha256.
 
 ### Input schema
 
@@ -82,7 +82,7 @@ Rules:
 
 - Kind: write
 - Role: member
-- Summary: Add a revision to a live file from bytes already staged in the vault.
+- Summary: Add a revision to a live file from bytes already prepared in content storage.
 
 ### Input schema
 
@@ -276,6 +276,96 @@ Rules:
 {"dialect":"draft-2020-12","schema":{"type":"object","properties":{"folders":{"type":"array","items":{"type":"object","properties":{"id":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"name":{"type":"string"},"parentId":{"anyOf":[{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},{"type":"null"}]}},"required":["id","name","parentId"],"additionalProperties":false}},"nextCursor":{"anyOf":[{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},{"type":"null"}]}},"required":["folders","nextCursor"],"additionalProperties":false},"definitions":{}}
 ```
 
+## folders.trash
+
+- Kind: write
+- Role: member
+- Summary: Move an empty live folder to the trash, refusing while it still holds anything live.
+
+### Input schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"folder":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"}},"required":["folder"],"additionalProperties":false},"definitions":{}}
+```
+
+### Output schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"id":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"name":{"type":"string"},"parentId":{"anyOf":[{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},{"type":"null"}]},"state":{"type":"string","enum":["live","trashed","purged"]}},"required":["id","name","parentId","state"],"additionalProperties":false},"definitions":{}}
+```
+
+## folders.restore
+
+- Kind: write
+- Role: member
+- Summary: Restore a trashed folder inside the retention window.
+
+### Input schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"folder":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"}},"required":["folder"],"additionalProperties":false},"definitions":{}}
+```
+
+### Output schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"id":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"name":{"type":"string"},"parentId":{"anyOf":[{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},{"type":"null"}]},"state":{"type":"string","enum":["live","trashed","purged"]}},"required":["id","name","parentId","state"],"additionalProperties":false},"definitions":{}}
+```
+
+## folders.purge
+
+- Kind: write
+- Role: member
+- Summary: Irreversibly purge an empty trashed folder whose name the caller types back.
+
+### Input schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"confirmName":{"type":"string"},"folder":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"}},"required":["confirmName","folder"],"additionalProperties":false},"definitions":{}}
+```
+
+### Output schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"name":{"type":"string"}},"required":["name"],"additionalProperties":false},"definitions":{}}
+```
+
+## orgs.close
+
+- Kind: write
+- Role: owner
+- Summary: Close this Organization, freezing every write until an Owner reopens it inside the window.
+
+### Input schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"confirmName":{"type":"string"}},"required":["confirmName"],"additionalProperties":false},"definitions":{}}
+```
+
+### Output schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"closedAt":{"anyOf":[{"type":"string"},{"type":"null"}]},"id":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"name":{"type":"string"},"state":{"type":"string","enum":["open","closed"]}},"required":["closedAt","id","name","state"],"additionalProperties":false},"definitions":{}}
+```
+
+## orgs.reopen
+
+- Kind: write
+- Role: owner
+- Summary: Reopen a closed Organization inside the retention window.
+
+### Input schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"confirmName":{"type":"string"}},"required":["confirmName"],"additionalProperties":false},"definitions":{}}
+```
+
+### Output schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"closedAt":{"anyOf":[{"type":"string"},{"type":"null"}]},"id":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"name":{"type":"string"},"state":{"type":"string","enum":["open","closed"]}},"required":["closedAt","id","name","state"],"additionalProperties":false},"definitions":{}}
+```
+
 ## members.invite
 
 - Kind: write
@@ -298,7 +388,7 @@ Rules:
 
 - Kind: read
 - Role: member
-- Summary: List the members of the Organization with their inherited roles.
+- Summary: List the members of the Organization with their inherited roles and usernames.
 
 ### Input schema
 
@@ -309,7 +399,7 @@ Rules:
 ### Output schema
 
 ```json
-{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"members":{"type":"array","items":{"type":"object","properties":{"role":{"type":"string","enum":["owner","admin","member"]},"userId":{"type":"string","minLength":1}},"required":["role","userId"],"additionalProperties":false}}},"required":["members"],"additionalProperties":false},"definitions":{}}
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"members":{"type":"array","items":{"type":"object","properties":{"role":{"type":"string","enum":["owner","admin","member"]},"userId":{"type":"string","minLength":1},"username":{"type":"string"}},"required":["role","userId","username"],"additionalProperties":false}}},"required":["members"],"additionalProperties":false},"definitions":{}}
 ```
 
 ## members.setRole
@@ -328,6 +418,24 @@ Rules:
 
 ```json
 {"dialect":"draft-2020-12","schema":{"type":"object","properties":{"expiresAt":{"type":"string"},"pendingChangeId":{"type":"string","minLength":1},"status":{"anyOf":[{"type":"string","enum":["awaiting_confirmation"]}]}},"required":["expiresAt","pendingChangeId","status"],"additionalProperties":false},"definitions":{}}
+```
+
+## members.setUsername
+
+- Kind: write
+- Role: member
+- Summary: Change your username in the current Organization directly.
+
+### Input schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"username":{"type":"string"}},"required":["username"],"additionalProperties":false},"definitions":{}}
+```
+
+### Output schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"username":{"type":"string"}},"required":["username"],"additionalProperties":false},"definitions":{}}
 ```
 
 ## members.remove
