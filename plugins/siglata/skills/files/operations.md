@@ -1,7 +1,7 @@
 # Siglata operation registry
 
 Operation registry API version: 2
-Operation registry revision: 6ba7b2ff7912975e85b0ca505c6ba956554e7be81e6c564c7319d602f6909e29
+Operation registry revision: f46ca36144a4cbad5f8ca0c61345a9ff6b1dfbc434d4a32592896e8a95a55692
 
 ## Writing a script
 
@@ -424,7 +424,7 @@ Rules:
 
 - Kind: write
 - Role: member
-- Summary: Change your username in the current Organization directly.
+- Summary: Change your username in the current Organization. Prepare only: the change waits for a human to confirm it in the app.
 
 ### Input schema
 
@@ -435,7 +435,7 @@ Rules:
 ### Output schema
 
 ```json
-{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"username":{"type":"string"}},"required":["username"],"additionalProperties":false},"definitions":{}}
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"expiresAt":{"type":"string"},"pendingChangeId":{"type":"string","minLength":1},"status":{"anyOf":[{"type":"string","enum":["awaiting_confirmation"]}]}},"required":["expiresAt","pendingChangeId","status"],"additionalProperties":false},"definitions":{}}
 ```
 
 ## members.remove
@@ -478,7 +478,7 @@ Rules:
 
 - Kind: write
 - Role: admin
-- Summary: Send a pending invitation again.
+- Summary: Send a pending invitation again. Prepare only: the change waits for a human to confirm it in the app.
 
 ### Input schema
 
@@ -489,7 +489,7 @@ Rules:
 ### Output schema
 
 ```json
-{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"invitationId":{"type":"string","minLength":1}},"required":["invitationId"],"additionalProperties":false},"definitions":{}}
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"expiresAt":{"type":"string"},"pendingChangeId":{"type":"string","minLength":1},"status":{"anyOf":[{"type":"string","enum":["awaiting_confirmation"]}]}},"required":["expiresAt","pendingChangeId","status"],"additionalProperties":false},"definitions":{}}
 ```
 
 ## audit.list
