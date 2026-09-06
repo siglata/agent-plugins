@@ -1,7 +1,7 @@
 # Siglata operation registry
 
 Operation registry API version: 2
-Operation registry revision: 1116eca4985a754320856fcb5902a6e5b995518243ae3c2a5e8ff934404518ad
+Operation registry revision: d1ca668c008f111832082f438d8a04de77131a2654e8ea7c49283c0b0fcdf0ea
 
 ## Writing a script
 
@@ -51,13 +51,13 @@ Rules:
 ### Input schema
 
 ```json
-{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"op":{"type":"string","enum":["operations.describe","files.create","files.addRevision","files.list","files.search","files.download","files.move","files.setTags","files.trash","files.restore","files.purge","folders.create","folders.list","folders.trash","folders.restore","folders.purge","orgs.close","orgs.reopen","members.invite","members.list","members.setRole","members.setUsername","members.remove","members.cancelInvitation","members.resendInvitation","audit.list","spreadsheets.listSheets","spreadsheets.readRange","spreadsheets.inspectCell","spreadsheets.collate","spreadsheets.query","spreadsheets.extractTable","spreadsheets.unpivotMatrix"]}},"required":["op"],"additionalProperties":false},"definitions":{}}
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"op":{"type":"string","enum":["operations.describe","files.create","files.addRevision","files.list","files.search","files.download","files.move","files.setTags","files.trash","files.restore","files.purge","folders.create","folders.list","folders.trash","folders.restore","folders.purge","orgs.close","orgs.reopen","members.invite","members.list","members.setRole","members.setUsername","members.remove","members.cancelInvitation","members.resendInvitation","audit.list","spreadsheets.listSheets","spreadsheets.readRange","spreadsheets.inspectCell","spreadsheets.collate","spreadsheets.query","spreadsheets.extractTable","spreadsheets.unpivotMatrix","spreadsheets.inspectTemplate","spreadsheets.fillTemplate"]}},"required":["op"],"additionalProperties":false},"definitions":{}}
 ```
 
 ### Output schema
 
 ```json
-{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"inputSchema":{},"kind":{"type":"string","enum":["read","write"]},"name":{"type":"string","enum":["operations.describe","files.create","files.addRevision","files.list","files.search","files.download","files.move","files.setTags","files.trash","files.restore","files.purge","folders.create","folders.list","folders.trash","folders.restore","folders.purge","orgs.close","orgs.reopen","members.invite","members.list","members.setRole","members.setUsername","members.remove","members.cancelInvitation","members.resendInvitation","audit.list","spreadsheets.listSheets","spreadsheets.readRange","spreadsheets.inspectCell","spreadsheets.collate","spreadsheets.query","spreadsheets.extractTable","spreadsheets.unpivotMatrix"]},"outputSchema":{},"role":{"type":"string","enum":["admin","member","owner"]},"summary":{"type":"string"}},"required":["inputSchema","kind","name","outputSchema","role","summary"],"additionalProperties":false},"definitions":{}}
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"inputSchema":{},"kind":{"type":"string","enum":["read","write"]},"name":{"type":"string","enum":["operations.describe","files.create","files.addRevision","files.list","files.search","files.download","files.move","files.setTags","files.trash","files.restore","files.purge","folders.create","folders.list","folders.trash","folders.restore","folders.purge","orgs.close","orgs.reopen","members.invite","members.list","members.setRole","members.setUsername","members.remove","members.cancelInvitation","members.resendInvitation","audit.list","spreadsheets.listSheets","spreadsheets.readRange","spreadsheets.inspectCell","spreadsheets.collate","spreadsheets.query","spreadsheets.extractTable","spreadsheets.unpivotMatrix","spreadsheets.inspectTemplate","spreadsheets.fillTemplate"]},"outputSchema":{},"role":{"type":"string","enum":["admin","member","owner"]},"summary":{"type":"string"}},"required":["inputSchema","kind","name","outputSchema","role","summary"],"additionalProperties":false},"definitions":{}}
 ```
 
 ## files.create
@@ -591,7 +591,7 @@ Rules:
 ### Input schema
 
 ```json
-{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"file":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"limit":{"type":"integer"},"query":{"type":"string"},"revision":{"type":"string"},"sheet":{"anyOf":[{"type":"string"},{"type":"integer"}]}},"required":["file","query"],"additionalProperties":false},"definitions":{}}
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"file":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"limit":{"type":"integer"},"query":{"type":"string"},"revision":{"type":"string"},"sheet":{"anyOf":[{"type":"string"},{"type":"integer"}]},"sources":{"type":"array","items":{"type":"object","properties":{"alias":{"type":"string"},"file":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"revision":{"type":"string"},"sheet":{"anyOf":[{"type":"string"},{"type":"integer"}]}},"required":["alias","file"],"additionalProperties":false}}},"required":["file","query"],"additionalProperties":false},"definitions":{}}
 ```
 
 ### Output schema
@@ -634,5 +634,41 @@ Rules:
 
 ```json
 {"dialect":"draft-2020-12","schema":{"type":"object","properties":{"columns":{"type":"array","items":{"type":"string"}},"file":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"rows":{"type":"array","items":{"type":"array","items":{"anyOf":[{"type":"object","properties":{"kind":{"type":"string","enum":["text"]},"value":{"type":"string"}},"required":["kind","value"],"additionalProperties":false},{"type":"object","properties":{"kind":{"type":"string","enum":["number"]},"value":{"anyOf":[{"type":"number"},{"type":"string","enum":["Infinity","-Infinity","NaN"]}]}},"required":["kind","value"],"additionalProperties":false},{"type":"object","properties":{"kind":{"type":"string","enum":["boolean"]},"value":{"type":"boolean"}},"required":["kind","value"],"additionalProperties":false},{"type":"object","properties":{"kind":{"type":"string","enum":["blank"]}},"required":["kind"],"additionalProperties":false}]}}},"sheet":{"type":"string"},"totalRows":{"type":"integer"}},"required":["columns","file","rows","sheet","totalRows"],"additionalProperties":false},"definitions":{}}
+```
+
+## spreadsheets.inspectTemplate
+
+- Kind: read
+- Role: member
+- Summary: Inspect an Excel template workbook to extract structure, merged headers, placeholder styles, and summary formulas.
+
+### Input schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"file":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"revision":{"type":"string"},"sheet":{"anyOf":[{"type":"string"},{"type":"integer"}]}},"required":["file"],"additionalProperties":false},"definitions":{}}
+```
+
+### Output schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"columnHeaders":{"type":"array","items":{"type":"string"}},"columnStyles":{"type":"array","items":{"type":"string"}},"dataStartRow":{"type":"integer"},"file":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"headerRow":{"type":"integer"},"mergeCells":{"type":"array","items":{"type":"string"}},"sheet":{"type":"string"},"summaryRows":{"type":"array","items":{"type":"object","properties":{"formulas":{"type":"object","additionalProperties":{"type":"string"}},"label":{"type":"string"},"row":{"type":"integer"}},"required":["formulas","label","row"],"additionalProperties":false}}},"required":["columnHeaders","columnStyles","dataStartRow","file","headerRow","mergeCells","sheet","summaryRows"],"additionalProperties":false},"definitions":{}}
+```
+
+## spreadsheets.fillTemplate
+
+- Kind: write
+- Role: member
+- Summary: Inject calculated relational rows into a pre-styled Excel template, preserving styling, formulas, and auto-calculating totals.
+
+### Input schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"anchorCell":{"type":"string"},"columnFormulas":{"type":"object","additionalProperties":{"type":"string"}},"columns":{"type":"array","items":{"type":"object","properties":{"column":{"type":"string"},"formula":{"type":"string"}},"additionalProperties":false}},"columnStyles":{"type":"array","items":{"type":"string"}},"file":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"name":{"type":"string"},"oldRows":{"type":"integer"},"revision":{"type":"string"},"rows":{"type":"array","items":{"type":"array","items":{"anyOf":[{"type":"object","properties":{"kind":{"type":"string","enum":["text"]},"value":{"type":"string"}},"required":["kind","value"],"additionalProperties":false},{"type":"object","properties":{"kind":{"type":"string","enum":["number"]},"value":{"anyOf":[{"type":"number"},{"type":"string","enum":["Infinity","-Infinity","NaN"]}]}},"required":["kind","value"],"additionalProperties":false},{"type":"object","properties":{"kind":{"type":"string","enum":["boolean"]},"value":{"type":"boolean"}},"required":["kind","value"],"additionalProperties":false},{"type":"object","properties":{"kind":{"type":"string","enum":["blank"]}},"required":["kind"],"additionalProperties":false}]}}},"sheet":{"anyOf":[{"type":"string"},{"type":"integer"}]},"tags":{"type":"array","items":{"type":"string"}}},"required":["anchorCell","file","name","rows"],"additionalProperties":false},"definitions":{}}
+```
+
+### Output schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"file":{"type":"object","properties":{"createdAt":{"type":"string"},"folderId":{"anyOf":[{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},{"type":"null"}]},"id":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"name":{"type":"string"},"revision":{"anyOf":[{"type":"object","properties":{"byteLength":{"type":"integer"},"createdAt":{"type":"string"},"id":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"mediaType":{"type":"string"},"sha256":{"type":"string","pattern":"^[0-9a-f]{64}$","description":"a lowercase hex sha256 digest"}},"required":["byteLength","createdAt","id","mediaType","sha256"],"additionalProperties":false},{"type":"null"}]},"revisions":{"type":"integer"},"state":{"type":"string","enum":["live","trashed","purged"]},"tags":{"type":"array","items":{"type":"string"}}},"required":["createdAt","folderId","id","name","revision","revisions","state","tags"],"additionalProperties":false},"injectedRows":{"type":"integer"},"name":{"type":"string"},"sheet":{"type":"string"}},"required":["file","injectedRows","name","sheet"],"additionalProperties":false},"definitions":{}}
 ```
 
