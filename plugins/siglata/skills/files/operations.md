@@ -1,7 +1,7 @@
 # Siglata operation registry
 
 Operation registry API version: 2
-Operation registry revision: f46ca36144a4cbad5f8ca0c61345a9ff6b1dfbc434d4a32592896e8a95a55692
+Operation registry revision: ae7d5f3edbca56a94adcc2c8b169ccd5e19e120e942af5e81af14ae3057db0e2
 
 ## Writing a script
 
@@ -51,13 +51,13 @@ Rules:
 ### Input schema
 
 ```json
-{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"op":{"type":"string","enum":["operations.describe","files.create","files.addRevision","files.list","files.search","files.download","files.move","files.setTags","files.trash","files.restore","files.purge","folders.create","folders.list","folders.trash","folders.restore","folders.purge","orgs.close","orgs.reopen","members.invite","members.list","members.setRole","members.setUsername","members.remove","members.cancelInvitation","members.resendInvitation","audit.list"]}},"required":["op"],"additionalProperties":false},"definitions":{}}
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"op":{"type":"string","enum":["operations.describe","files.create","files.addRevision","files.list","files.search","files.download","files.move","files.setTags","files.trash","files.restore","files.purge","folders.create","folders.list","folders.trash","folders.restore","folders.purge","orgs.close","orgs.reopen","members.invite","members.list","members.setRole","members.setUsername","members.remove","members.cancelInvitation","members.resendInvitation","audit.list","spreadsheets.listSheets","spreadsheets.readRange","spreadsheets.inspectCell","spreadsheets.collate"]}},"required":["op"],"additionalProperties":false},"definitions":{}}
 ```
 
 ### Output schema
 
 ```json
-{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"inputSchema":{},"kind":{"type":"string","enum":["read","write"]},"name":{"type":"string","enum":["operations.describe","files.create","files.addRevision","files.list","files.search","files.download","files.move","files.setTags","files.trash","files.restore","files.purge","folders.create","folders.list","folders.trash","folders.restore","folders.purge","orgs.close","orgs.reopen","members.invite","members.list","members.setRole","members.setUsername","members.remove","members.cancelInvitation","members.resendInvitation","audit.list"]},"outputSchema":{},"role":{"type":"string","enum":["admin","member","owner"]},"summary":{"type":"string"}},"required":["inputSchema","kind","name","outputSchema","role","summary"],"additionalProperties":false},"definitions":{}}
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"inputSchema":{},"kind":{"type":"string","enum":["read","write"]},"name":{"type":"string","enum":["operations.describe","files.create","files.addRevision","files.list","files.search","files.download","files.move","files.setTags","files.trash","files.restore","files.purge","folders.create","folders.list","folders.trash","folders.restore","folders.purge","orgs.close","orgs.reopen","members.invite","members.list","members.setRole","members.setUsername","members.remove","members.cancelInvitation","members.resendInvitation","audit.list","spreadsheets.listSheets","spreadsheets.readRange","spreadsheets.inspectCell","spreadsheets.collate"]},"outputSchema":{},"role":{"type":"string","enum":["admin","member","owner"]},"summary":{"type":"string"}},"required":["inputSchema","kind","name","outputSchema","role","summary"],"additionalProperties":false},"definitions":{}}
 ```
 
 ## files.create
@@ -508,5 +508,77 @@ Rules:
 
 ```json
 {"dialect":"draft-2020-12","schema":{"type":"object","properties":{"events":{"type":"array","items":{"type":"object","properties":{"at":{"type":"string"},"clientId":{"type":"string","minLength":1},"id":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"inputRevisions":{},"operation":{"type":"string"},"planDigest":{"anyOf":[{"type":"string"},{"type":"null"}]},"resultHashes":{},"targets":{},"userId":{"type":"string","minLength":1}},"required":["at","clientId","id","inputRevisions","operation","planDigest","resultHashes","targets","userId"],"additionalProperties":false}},"nextCursor":{"anyOf":[{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},{"type":"null"}]}},"required":["events","nextCursor"],"additionalProperties":false},"definitions":{}}
+```
+
+## spreadsheets.listSheets
+
+- Kind: read
+- Role: member
+- Summary: List all sheets in a spreadsheet workbook with dimensions and row/column counts.
+
+### Input schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"file":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"revision":{"type":"string"}},"required":["file"],"additionalProperties":false},"definitions":{}}
+```
+
+### Output schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"file":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"mediaType":{"type":"string"},"name":{"type":"string"},"revisionId":{"type":"string"},"sheets":{"type":"array","items":{"type":"object","properties":{"columnCount":{"type":"integer"},"index":{"type":"integer"},"name":{"type":"string"},"rowCount":{"type":"integer"}},"required":["columnCount","index","name","rowCount"],"additionalProperties":false}}},"required":["file","mediaType","name","revisionId","sheets"],"additionalProperties":false},"definitions":{}}
+```
+
+## spreadsheets.readRange
+
+- Kind: read
+- Role: member
+- Summary: Read structured cell values and rows from a spreadsheet workbook or CSV.
+
+### Input schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"file":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"limit":{"type":"integer"},"offset":{"type":"integer"},"range":{"type":"string"},"revision":{"type":"string"},"sheet":{"anyOf":[{"type":"string"},{"type":"integer"}]}},"required":["file"],"additionalProperties":false},"definitions":{}}
+```
+
+### Output schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"file":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"headers":{"type":"array","items":{"type":"string"}},"range":{"type":"string"},"rows":{"type":"array","items":{"type":"array","items":{"anyOf":[{"type":"object","properties":{"kind":{"type":"string","enum":["text"]},"value":{"type":"string"}},"required":["kind","value"],"additionalProperties":false},{"type":"object","properties":{"kind":{"type":"string","enum":["number"]},"value":{"anyOf":[{"type":"number"},{"type":"string","enum":["Infinity","-Infinity","NaN"]}]}},"required":["kind","value"],"additionalProperties":false},{"type":"object","properties":{"kind":{"type":"string","enum":["boolean"]},"value":{"type":"boolean"}},"required":["kind","value"],"additionalProperties":false},{"type":"object","properties":{"kind":{"type":"string","enum":["blank"]}},"required":["kind"],"additionalProperties":false}]}}},"sheet":{"type":"string"},"totalColumns":{"type":"integer"},"totalRows":{"type":"integer"}},"required":["file","headers","range","rows","sheet","totalColumns","totalRows"],"additionalProperties":false},"definitions":{}}
+```
+
+## spreadsheets.inspectCell
+
+- Kind: read
+- Role: member
+- Summary: Inspect a single cell's cached value, type, and formula.
+
+### Input schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"cell":{"type":"string"},"file":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"revision":{"type":"string"},"sheet":{"anyOf":[{"type":"string"},{"type":"integer"}]}},"required":["cell","file"],"additionalProperties":false},"definitions":{}}
+```
+
+### Output schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"cell":{"type":"string"},"formula":{"anyOf":[{"type":"string"},{"type":"null"}]},"sheet":{"type":"string"},"type":{"type":"string","enum":["text","number","boolean","blank","error"]},"value":{"anyOf":[{"type":"object","properties":{"kind":{"type":"string","enum":["text"]},"value":{"type":"string"}},"required":["kind","value"],"additionalProperties":false},{"type":"object","properties":{"kind":{"type":"string","enum":["number"]},"value":{"anyOf":[{"type":"number"},{"type":"string","enum":["Infinity","-Infinity","NaN"]}]}},"required":["kind","value"],"additionalProperties":false},{"type":"object","properties":{"kind":{"type":"string","enum":["boolean"]},"value":{"type":"boolean"}},"required":["kind","value"],"additionalProperties":false},{"type":"object","properties":{"kind":{"type":"string","enum":["blank"]}},"required":["kind"],"additionalProperties":false}]}},"required":["cell","formula","sheet","type","value"],"additionalProperties":false},"definitions":{}}
+```
+
+## spreadsheets.collate
+
+- Kind: write
+- Role: member
+- Summary: Collate multiple spreadsheet sources into a uniform target report with arithmetic tie-out reconciliation.
+
+### Input schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"columns":{"type":"array","items":{"type":"string"}},"folder":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"includeSourceLabel":{"type":"boolean"},"locale":{"type":"string","enum":["en-US","pt-BR"]},"name":{"type":"string"},"sources":{"type":"array","items":{"type":"object","properties":{"file":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"label":{"type":"string"},"range":{"type":"string"},"revision":{"type":"string"},"sheet":{"anyOf":[{"type":"string"},{"type":"integer"}]}},"required":["file"],"additionalProperties":false}},"tags":{"type":"array","items":{"type":"string"}},"template":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"tieOutColumn":{"type":"string"}},"required":["columns","name","sources"],"additionalProperties":false},"definitions":{}}
+```
+
+### Output schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"file":{"type":"object","properties":{"createdAt":{"type":"string"},"folderId":{"anyOf":[{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},{"type":"null"}]},"id":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"name":{"type":"string"},"revision":{"anyOf":[{"type":"object","properties":{"byteLength":{"type":"integer"},"createdAt":{"type":"string"},"id":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"mediaType":{"type":"string"},"sha256":{"type":"string","pattern":"^[0-9a-f]{64}$","description":"a lowercase hex sha256 digest"}},"required":["byteLength","createdAt","id","mediaType","sha256"],"additionalProperties":false},{"type":"null"}]},"revisions":{"type":"integer"},"state":{"type":"string","enum":["live","trashed","purged"]},"tags":{"type":"array","items":{"type":"string"}}},"required":["createdAt","folderId","id","name","revision","revisions","state","tags"],"additionalProperties":false},"reconciliation":{"type":"object","properties":{"collatedTotal":{"anyOf":[{"anyOf":[{"type":"number"},{"type":"string","enum":["Infinity","-Infinity","NaN"]}]},{"type":"null"}]},"formattedCollatedTotal":{"type":"string"},"formattedSourceTotal":{"type":"string"},"message":{"type":"string"},"sourceTotal":{"anyOf":[{"anyOf":[{"type":"number"},{"type":"string","enum":["Infinity","-Infinity","NaN"]}]},{"type":"null"}]},"status":{"type":"string","enum":["verified","variance","not_requested"]},"variance":{"anyOf":[{"anyOf":[{"type":"number"},{"type":"string","enum":["Infinity","-Infinity","NaN"]}]},{"type":"null"}]}},"required":["collatedTotal","message","sourceTotal","status","variance"],"additionalProperties":false},"sourceSummaries":{"type":"array","items":{"type":"object","properties":{"file":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"label":{"type":"string"},"rowsExtracted":{"type":"integer"},"subtotal":{"anyOf":[{"anyOf":[{"type":"number"},{"type":"string","enum":["Infinity","-Infinity","NaN"]}]},{"type":"null"}]}},"required":["file","label","rowsExtracted","subtotal"],"additionalProperties":false}},"totalRows":{"type":"integer"}},"required":["file","reconciliation","sourceSummaries","totalRows"],"additionalProperties":false},"definitions":{}}
 ```
 
