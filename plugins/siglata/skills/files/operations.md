@@ -1,7 +1,7 @@
 # Siglata operation registry
 
 Operation registry API version: 2
-Operation registry revision: ae7d5f3edbca56a94adcc2c8b169ccd5e19e120e942af5e81af14ae3057db0e2
+Operation registry revision: 866545f79cf3d0bdd7ec317a917c644bd255264a502beeaf2d03e5c0f9b38d29
 
 ## Writing a script
 
@@ -51,13 +51,13 @@ Rules:
 ### Input schema
 
 ```json
-{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"op":{"type":"string","enum":["operations.describe","files.create","files.addRevision","files.list","files.search","files.download","files.move","files.setTags","files.trash","files.restore","files.purge","folders.create","folders.list","folders.trash","folders.restore","folders.purge","orgs.close","orgs.reopen","members.invite","members.list","members.setRole","members.setUsername","members.remove","members.cancelInvitation","members.resendInvitation","audit.list","spreadsheets.listSheets","spreadsheets.readRange","spreadsheets.inspectCell","spreadsheets.collate"]}},"required":["op"],"additionalProperties":false},"definitions":{}}
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"op":{"type":"string","enum":["operations.describe","files.create","files.addRevision","files.list","files.search","files.download","files.move","files.setTags","files.trash","files.restore","files.purge","folders.create","folders.list","folders.trash","folders.restore","folders.purge","orgs.close","orgs.reopen","members.invite","members.list","members.setRole","members.setUsername","members.remove","members.cancelInvitation","members.resendInvitation","audit.list","spreadsheets.listSheets","spreadsheets.readRange","spreadsheets.inspectCell","spreadsheets.collate","spreadsheets.query"]}},"required":["op"],"additionalProperties":false},"definitions":{}}
 ```
 
 ### Output schema
 
 ```json
-{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"inputSchema":{},"kind":{"type":"string","enum":["read","write"]},"name":{"type":"string","enum":["operations.describe","files.create","files.addRevision","files.list","files.search","files.download","files.move","files.setTags","files.trash","files.restore","files.purge","folders.create","folders.list","folders.trash","folders.restore","folders.purge","orgs.close","orgs.reopen","members.invite","members.list","members.setRole","members.setUsername","members.remove","members.cancelInvitation","members.resendInvitation","audit.list","spreadsheets.listSheets","spreadsheets.readRange","spreadsheets.inspectCell","spreadsheets.collate"]},"outputSchema":{},"role":{"type":"string","enum":["admin","member","owner"]},"summary":{"type":"string"}},"required":["inputSchema","kind","name","outputSchema","role","summary"],"additionalProperties":false},"definitions":{}}
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"inputSchema":{},"kind":{"type":"string","enum":["read","write"]},"name":{"type":"string","enum":["operations.describe","files.create","files.addRevision","files.list","files.search","files.download","files.move","files.setTags","files.trash","files.restore","files.purge","folders.create","folders.list","folders.trash","folders.restore","folders.purge","orgs.close","orgs.reopen","members.invite","members.list","members.setRole","members.setUsername","members.remove","members.cancelInvitation","members.resendInvitation","audit.list","spreadsheets.listSheets","spreadsheets.readRange","spreadsheets.inspectCell","spreadsheets.collate","spreadsheets.query"]},"outputSchema":{},"role":{"type":"string","enum":["admin","member","owner"]},"summary":{"type":"string"}},"required":["inputSchema","kind","name","outputSchema","role","summary"],"additionalProperties":false},"definitions":{}}
 ```
 
 ## files.create
@@ -580,5 +580,23 @@ Rules:
 
 ```json
 {"dialect":"draft-2020-12","schema":{"type":"object","properties":{"file":{"type":"object","properties":{"createdAt":{"type":"string"},"folderId":{"anyOf":[{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},{"type":"null"}]},"id":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"name":{"type":"string"},"revision":{"anyOf":[{"type":"object","properties":{"byteLength":{"type":"integer"},"createdAt":{"type":"string"},"id":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"mediaType":{"type":"string"},"sha256":{"type":"string","pattern":"^[0-9a-f]{64}$","description":"a lowercase hex sha256 digest"}},"required":["byteLength","createdAt","id","mediaType","sha256"],"additionalProperties":false},{"type":"null"}]},"revisions":{"type":"integer"},"state":{"type":"string","enum":["live","trashed","purged"]},"tags":{"type":"array","items":{"type":"string"}}},"required":["createdAt","folderId","id","name","revision","revisions","state","tags"],"additionalProperties":false},"reconciliation":{"type":"object","properties":{"collatedTotal":{"anyOf":[{"anyOf":[{"type":"number"},{"type":"string","enum":["Infinity","-Infinity","NaN"]}]},{"type":"null"}]},"formattedCollatedTotal":{"type":"string"},"formattedSourceTotal":{"type":"string"},"message":{"type":"string"},"sourceTotal":{"anyOf":[{"anyOf":[{"type":"number"},{"type":"string","enum":["Infinity","-Infinity","NaN"]}]},{"type":"null"}]},"status":{"type":"string","enum":["verified","variance","not_requested"]},"variance":{"anyOf":[{"anyOf":[{"type":"number"},{"type":"string","enum":["Infinity","-Infinity","NaN"]}]},{"type":"null"}]}},"required":["collatedTotal","message","sourceTotal","status","variance"],"additionalProperties":false},"sourceSummaries":{"type":"array","items":{"type":"object","properties":{"file":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"label":{"type":"string"},"rowsExtracted":{"type":"integer"},"subtotal":{"anyOf":[{"anyOf":[{"type":"number"},{"type":"string","enum":["Infinity","-Infinity","NaN"]}]},{"type":"null"}]}},"required":["file","label","rowsExtracted","subtotal"],"additionalProperties":false}},"totalRows":{"type":"integer"}},"required":["file","reconciliation","sourceSummaries","totalRows"],"additionalProperties":false},"definitions":{}}
+```
+
+## spreadsheets.query
+
+- Kind: read
+- Role: member
+- Summary: Run a read-only SQL query over spreadsheet data.
+
+### Input schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"file":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"limit":{"type":"integer"},"query":{"type":"string"},"revision":{"type":"string"},"sheet":{"anyOf":[{"type":"string"},{"type":"integer"}]}},"required":["file","query"],"additionalProperties":false},"definitions":{}}
+```
+
+### Output schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"columns":{"type":"array","items":{"type":"string"}},"file":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"rows":{"type":"array","items":{"type":"array","items":{"anyOf":[{"type":"object","properties":{"kind":{"type":"string","enum":["text"]},"value":{"type":"string"}},"required":["kind","value"],"additionalProperties":false},{"type":"object","properties":{"kind":{"type":"string","enum":["number"]},"value":{"anyOf":[{"type":"number"},{"type":"string","enum":["Infinity","-Infinity","NaN"]}]}},"required":["kind","value"],"additionalProperties":false},{"type":"object","properties":{"kind":{"type":"string","enum":["boolean"]},"value":{"type":"boolean"}},"required":["kind","value"],"additionalProperties":false},{"type":"object","properties":{"kind":{"type":"string","enum":["blank"]}},"required":["kind"],"additionalProperties":false}]}}},"sheet":{"type":"string"},"totalRows":{"type":"integer"}},"required":["columns","file","rows","sheet","totalRows"],"additionalProperties":false},"definitions":{}}
 ```
 
