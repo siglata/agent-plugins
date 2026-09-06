@@ -1,6 +1,6 @@
 ---
 name: files
-description: Read, search and change Siglata Organization files through the hosted Siglata MCP server, planning every mutation before applying it.
+description: Read or change Siglata files through its connected MCP server.
 license: Apache-2.0
 compatibility: Any client that loads Agent Plugins 1.0.0 and speaks Streamable HTTP MCP. Verified against Codex 0.146 or newer with an authorized Siglata connection. Claude Code registers the same endpoint with `claude mcp add --transport http`; Claude Desktop reaches it through an `mcp-remote` entry in `claude_desktop_config.json`; both sign in through the client's OAuth flow.
 ---
@@ -11,7 +11,7 @@ Every file action goes through the connected Siglata MCP server. Do not substitu
 
 ## Start with context
 
-Call `context` first. It reports the active Organization, the caller's role, the operation registry API version and the current limits. Confirm the Organization and the role before reading or changing anything.
+Call `context` first. It reports the active Organization, the caller's role, the operation registry API version and the current limits. Inspect that context to establish the Organization and role before reading or changing anything. Ask the user only if the intended Organization is ambiguous or the context does not match the request; inspecting context is not a separate approval step.
 
 ## Write one script per intent
 
@@ -38,7 +38,7 @@ Let the server validate operation arguments and report its stable error code rat
 
 ## Operation reference
 
-`operations.md` beside this file lists every operation, its kind, the role it needs, and its input and output schemas. Read it when you need an operation name or an argument shape. It is generated from the live operation registry, so it is the authority; do not restate its schemas here.
+`operations.md` beside this file lists every operation, its kind, the role it needs, and its input and output schemas. Read it when you need an operation name or an argument shape. It is a generated snapshot: compare its API version and revision with the connected server context before relying on it. If they differ, use the connected server's operation descriptions (including `operations.describe` when available); do not guess schemas or treat the shipped snapshot as current. Do not restate schemas here.
 
 ## Attachment references
 
