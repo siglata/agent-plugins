@@ -1,7 +1,7 @@
 # Siglata operation registry
 
 Operation registry API version: 2
-Operation registry revision: d1ca668c008f111832082f438d8a04de77131a2654e8ea7c49283c0b0fcdf0ea
+Operation registry revision: 3f613675f8b0a685d2cd56468dfa40032f08e0d828c5b7b41d0105876a25470a
 
 ## Writing a script
 
@@ -51,13 +51,13 @@ Rules:
 ### Input schema
 
 ```json
-{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"op":{"type":"string","enum":["operations.describe","files.create","files.addRevision","files.list","files.search","files.download","files.move","files.setTags","files.trash","files.restore","files.purge","folders.create","folders.list","folders.trash","folders.restore","folders.purge","orgs.close","orgs.reopen","members.invite","members.list","members.setRole","members.setUsername","members.remove","members.cancelInvitation","members.resendInvitation","audit.list","spreadsheets.listSheets","spreadsheets.readRange","spreadsheets.inspectCell","spreadsheets.collate","spreadsheets.query","spreadsheets.extractTable","spreadsheets.unpivotMatrix","spreadsheets.inspectTemplate","spreadsheets.fillTemplate"]}},"required":["op"],"additionalProperties":false},"definitions":{}}
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"op":{"type":"string","enum":["operations.describe","files.create","files.addRevision","files.list","files.search","files.download","files.move","files.setTags","files.trash","files.restore","files.purge","folders.create","folders.list","folders.trash","folders.restore","folders.purge","orgs.close","orgs.reopen","members.invite","members.list","members.setRole","members.setUsername","members.remove","members.cancelInvitation","members.resendInvitation","audit.list","spreadsheets.listSheets","spreadsheets.readRange","spreadsheets.inspectCell","spreadsheets.collate","spreadsheets.query","spreadsheets.extractTable","spreadsheets.unpivotMatrix","spreadsheets.inspectTemplate","spreadsheets.fillTemplate","spreadsheets.export"]}},"required":["op"],"additionalProperties":false},"definitions":{}}
 ```
 
 ### Output schema
 
 ```json
-{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"inputSchema":{},"kind":{"type":"string","enum":["read","write"]},"name":{"type":"string","enum":["operations.describe","files.create","files.addRevision","files.list","files.search","files.download","files.move","files.setTags","files.trash","files.restore","files.purge","folders.create","folders.list","folders.trash","folders.restore","folders.purge","orgs.close","orgs.reopen","members.invite","members.list","members.setRole","members.setUsername","members.remove","members.cancelInvitation","members.resendInvitation","audit.list","spreadsheets.listSheets","spreadsheets.readRange","spreadsheets.inspectCell","spreadsheets.collate","spreadsheets.query","spreadsheets.extractTable","spreadsheets.unpivotMatrix","spreadsheets.inspectTemplate","spreadsheets.fillTemplate"]},"outputSchema":{},"role":{"type":"string","enum":["admin","member","owner"]},"summary":{"type":"string"}},"required":["inputSchema","kind","name","outputSchema","role","summary"],"additionalProperties":false},"definitions":{}}
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"inputSchema":{},"kind":{"type":"string","enum":["read","write"]},"name":{"type":"string","enum":["operations.describe","files.create","files.addRevision","files.list","files.search","files.download","files.move","files.setTags","files.trash","files.restore","files.purge","folders.create","folders.list","folders.trash","folders.restore","folders.purge","orgs.close","orgs.reopen","members.invite","members.list","members.setRole","members.setUsername","members.remove","members.cancelInvitation","members.resendInvitation","audit.list","spreadsheets.listSheets","spreadsheets.readRange","spreadsheets.inspectCell","spreadsheets.collate","spreadsheets.query","spreadsheets.extractTable","spreadsheets.unpivotMatrix","spreadsheets.inspectTemplate","spreadsheets.fillTemplate","spreadsheets.export"]},"outputSchema":{},"role":{"type":"string","enum":["admin","member","owner"]},"summary":{"type":"string"}},"required":["inputSchema","kind","name","outputSchema","role","summary"],"additionalProperties":false},"definitions":{}}
 ```
 
 ## files.create
@@ -670,5 +670,23 @@ Rules:
 
 ```json
 {"dialect":"draft-2020-12","schema":{"type":"object","properties":{"file":{"type":"object","properties":{"createdAt":{"type":"string"},"folderId":{"anyOf":[{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},{"type":"null"}]},"id":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"name":{"type":"string"},"revision":{"anyOf":[{"type":"object","properties":{"byteLength":{"type":"integer"},"createdAt":{"type":"string"},"id":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"mediaType":{"type":"string"},"sha256":{"type":"string","pattern":"^[0-9a-f]{64}$","description":"a lowercase hex sha256 digest"}},"required":["byteLength","createdAt","id","mediaType","sha256"],"additionalProperties":false},{"type":"null"}]},"revisions":{"type":"integer"},"state":{"type":"string","enum":["live","trashed","purged"]},"tags":{"type":"array","items":{"type":"string"}}},"required":["createdAt","folderId","id","name","revision","revisions","state","tags"],"additionalProperties":false},"injectedRows":{"type":"integer"},"name":{"type":"string"},"sheet":{"type":"string"}},"required":["file","injectedRows","name","sheet"],"additionalProperties":false},"definitions":{}}
+```
+
+## spreadsheets.export
+
+- Kind: read
+- Role: member
+- Summary: Export a spreadsheet workbook or report, returning an authenticated direct download URL.
+
+### Input schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"file":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"revision":{"type":"string"}},"required":["file"],"additionalProperties":false},"definitions":{}}
+```
+
+### Output schema
+
+```json
+{"dialect":"draft-2020-12","schema":{"type":"object","properties":{"downloadUrl":{"type":"string"},"file":{"type":"string","pattern":"^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$","format":"uuid"},"mediaType":{"type":"string"},"name":{"type":"string"},"revisionId":{"type":"string"},"size":{"type":"integer"}},"required":["downloadUrl","file","mediaType","name","revisionId","size"],"additionalProperties":false},"definitions":{}}
 ```
 
