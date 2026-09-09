@@ -1,13 +1,12 @@
-# Siglata Agent Plugins
+# Siglata
 
-This repository is a generated public repository of the Agent Plugins package from [siglata/siglata](https://github.com/siglata/siglata).
-The private source repository is authoritative and this tree is written from it, file for file.
-Pull requests are not accepted here. Submit changes to the private source repository.
+Manage Siglata files and organization access, and create reusable agent skills for any domain.
 
-The publisher owns exactly these paths and rewrites every one of them on every run:
+Use the `siglata` skill for all requests. It routes file tasks to Drive, organization tasks to Admin, and skill authoring to Skills. Skill authoring works without a Siglata connection.
 
-- `plugins`
-- `.agents`
-- `README.md`
+## Connect
 
-Source commit: `1aafd26461ae2c6c43a02868c8983a8253e6285e`
+Install `plugins/siglata` from this repository using an [Agent Plugins compatible client](https://agent-plugins.org/compatible-clients) that supports skills and Streamable HTTP MCP. Sign in to Siglata through the client's OAuth flow.
+
+Installing the whole plugin includes all four skills and the MCP connection configuration. Installing skills alone does not connect the service. If service tools are missing, enable the plugin and its connection in your client. If authentication expires, reconnect through the client's OAuth flow.
+
