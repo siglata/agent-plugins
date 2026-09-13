@@ -1,8 +1,23 @@
 # Siglata agent plugin
 
-Manage Siglata files and organization access, and create reusable agent skills from your AI client.
+Portable [Agent Plugins](https://agent-plugins.org/) 1.0.0 package for Siglata. Compatible clients load the plugin directory, its skills, and the hosted MCP connection. See [Build an Agent Plugin](https://agent-plugins.org/plugin-authors/build-an-agent-plugin), [compatible clients](https://agent-plugins.org/compatible-clients), and the [1.0.0 schemas](https://agent-plugins.org/schemas/1.0.0/plugin.schema.json).
 
-This [Agent Plugins](https://agent-plugins.org/) package bundles four skills and the hosted Siglata MCP connection configuration. Invoke **`siglata`**; it loads the specialists needed for your request.
+## Package layout
+
+```text
+plugins/siglata/
+├── plugin.json
+├── mcp.json
+└── skills/
+    ├── siglata/
+    ├── siglata-drive/
+    ├── siglata-admin/
+    └── siglata-skills/
+```
+
+Invoke **`siglata`**; it loads the specialists needed for your request.
+
+`.agents/plugins/marketplace.json` is Codex distribution metadata. It sits outside the portable Agent Plugins v1 package, as in the official example guidance.
 
 ## Install in Codex
 
@@ -14,6 +29,17 @@ codex plugin add siglata@siglata-agent-plugins
 ```
 
 Start a new Codex session after installation. Complete Siglata sign-in through the client's OAuth flow when prompted.
+
+## Validate
+
+Requires Python 3 with `jsonschema` and `PyYAML`:
+
+```sh
+python -m pip install jsonschema PyYAML
+python scripts/validate-plugin.py plugins/siglata
+```
+
+Optional: cache downloaded schemas with `--schema-dir /path/to/cache`.
 
 ## Use Siglata
 
@@ -47,4 +73,3 @@ File and organization operations require a Siglata connection and the appropriat
 Install `plugins/siglata` from this repository using an [Agent Plugins compatible client](https://agent-plugins.org/compatible-clients) that supports skills and Streamable HTTP MCP. Sign in to Siglata through the client's OAuth flow.
 
 Install the whole plugin to include its skills and MCP connection configuration. Installing skills alone does not connect the service. Installation and enablement are controlled by each client; Agent Plugins defines the portable package format.
-
