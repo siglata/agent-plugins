@@ -68,6 +68,25 @@ File and organization operations require a Siglata connection and the appropriat
 - If access is denied, resolve the reported organization, role, or approval requirement.
 - Some access changes require confirmation in the Siglata app. The agent reports them as pending until the service confirms completion.
 
+
+## Client install matrix (v1)
+
+Every client on [compatible-clients](https://agent-plugins.org/compatible-clients) must be able to install, enable, and run `plugins/siglata`.
+
+| Client | Automated smoke | Install |
+| --- | --- | --- |
+| ChatGPT & Codex | `codex plugin marketplace add` + `plugin add` | See below |
+| OpenClaw | `openclaw plugins install ./plugins/siglata` | Bundle enable |
+| VS Code, Cursor, GitHub Copilot, Kiro, Hermes, Grok Bot, NanoClaw | Package validation + MCP 401 probe | Point client at `plugins/siglata` (see matrix) |
+
+Full recipes, manual gaps, and evidence pointers: [docs/client-install-matrix.md](docs/client-install-matrix.md).
+
+```sh
+python3 scripts/smoke-client-matrix.py
+```
+
+Schemas are pinned under `schemas/1.0.0/` for offline validation; the smoke script compares them to live URLs when network is available.
+
 ## Other compatible clients
 
 Install `plugins/siglata` from this repository using an [Agent Plugins compatible client](https://agent-plugins.org/compatible-clients) that supports skills and Streamable HTTP MCP. Sign in to Siglata through the client's OAuth flow.
