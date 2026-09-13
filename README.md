@@ -35,8 +35,8 @@ Start a new Codex session after installation. Complete Siglata sign-in through t
 Requires Python 3 with `jsonschema` and `PyYAML`:
 
 ```sh
-python -m pip install jsonschema PyYAML
-python scripts/validate-plugin.py plugins/siglata
+python3 -m pip install jsonschema PyYAML
+python3 scripts/validate-plugin.py plugins/siglata
 ```
 
 Optional: cache downloaded schemas with `--schema-dir /path/to/cache`.
