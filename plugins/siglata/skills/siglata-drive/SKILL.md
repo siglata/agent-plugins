@@ -1,17 +1,16 @@
 ---
 name: siglata-drive
-description: Manages Siglata Drive files and folders. Use for finding, uploading, downloading, organizing, tagging, deleting, or restoring files in Siglata.
+description: Manages Siglata Drive files and folders. Use for finding, uploading, downloading, organizing, deleting, or restoring files in Siglata.
 ---
 
 # Siglata Drive
 
 Follow the [shared workflow](../siglata/SKILL.md#workflow), reusing it if already loaded.
 
-- Find requested files or folders through `search`. Resolve ambiguous names before making changes.
-- Follow pagination until the requested set is covered.
-- Upload through the connection's supported file-transfer capability. If unavailable, explain what the client needs. An upload is complete when the server returns the saved file or revision.
-- Deliver downloaded bytes as a usable file or client attachment.
-- Preserve existing tags when adding a tag: `files.setTags` replaces the entire set.
+- Find files and folders with `files_list` and `folders_list` inside an `execute` script, then read one with `file_get` or `file_read`. The `search` tool lists operations, not files.
+- Follow pagination until the requested set is covered. Resolve ambiguous names before making changes.
+- Start an upload with `upload_begin` and complete the transfer it describes, or write small contents directly with `file_write`. If the client cannot transfer bytes, explain what it needs. An upload is complete when the server returns the saved file or revision.
+- Read bytes through the `siglata:///files/{fileId}` resource, which needs the `files:read` scope. Deliver them as a usable file or client attachment.
 - Move files into the requested folder. Omit the destination folder only when moving to the root.
 - Use trash for deletion. Permanently purge only when explicitly requested.
-- A folder must be empty before trashing. Trash its contents first when they are in scope; ask before removing anything else.
+- Trashing a folder does not require it to be empty, and each file inside keeps its own trashed or active state. Trash or restore a file directly when the person asks for that file.

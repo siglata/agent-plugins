@@ -1,6 +1,6 @@
 ---
 name: siglata-admin
-description: Manages Siglata organizations. Use for members, invitations, permissions, organization roles, usernames, or closing and reopening an organization.
+description: Manages Siglata organizations. Use for members, invitations, permissions, and organization roles.
 ---
 
 # Siglata Admin
@@ -9,6 +9,5 @@ Follow the [shared workflow](../siglata/SKILL.md#workflow), reusing it if alread
 
 - Resolve the member or invitation from server results. Clarify ambiguous people or unspecified roles before changing access.
 - Permissions are organization roles: `owner`, `admin`, and `member`. Preserve at least one owner.
-- Invitations, role changes, removals, and username changes can require app confirmation after applying. For `awaiting_confirmation`, give the pending change details and direct the person to confirm in the Siglata app. Report completion when the server confirms the effect.
-- Cancel or resend using the invitation ID from its record or link. A pending change ID identifies an approval request. If the invitation cannot be found, request its ID or direct the person to the app.
-- Close or reopen an organization only on an explicit request. Closing freezes writes.
+- Run the `members_*`, `invitation_*`, and `organization_*` operations through `execute`. Report the result the server returns for each call.
+- Cancel or resend using the invitation ID from its record or link. If the invitation cannot be found, request its ID or direct the person to the app.
