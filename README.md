@@ -53,8 +53,8 @@ Use siglata to create a skill that summarizes meeting notes.
 
 | Request | Routed skill |
 | --- | --- |
-| Find, upload, download, organize, tag, trash, or restore files and folders | `siglata-drive` |
-| Manage members, invitations, roles, or organization lifecycle | `siglata-admin` |
+| Find, upload, download, organize, trash, or restore files and folders | `siglata-drive` |
+| Manage members, invitations, and organization roles | `siglata-admin` |
 | Create or improve reusable agent skills for any domain | `siglata-skills` |
 
 Mixed requests load all relevant specialists. You do not need to invoke them separately.
@@ -66,7 +66,6 @@ File and organization operations require a Siglata connection and the appropriat
 - If Siglata tools are missing, enable the plugin and its MCP connection in your client.
 - If authentication expires, reconnect through the client's OAuth flow. Keep credentials in the client.
 - If access is denied, resolve the reported organization, role, or approval requirement.
-- Some access changes require confirmation in the Siglata app. The agent reports them as pending until the service confirms completion.
 
 ## Other compatible clients
 
