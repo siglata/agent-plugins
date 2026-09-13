@@ -12,7 +12,7 @@ Portable package under test: `plugins/siglata` (skills + Streamable HTTP MCP →
 | --- | --- | --- |
 | Pinned schemas 1.0.0 | PASS | `schemas/1.0.0/{plugin,mcp}.schema.json` |
 | `validate-plugin.py plugins/siglata --schema-dir schemas/1.0.0` | PASS | CI + `scripts/smoke-client-matrix.py` |
-| MCP Streamable HTTP reachable | PASS | `POST /v1/mcp` → **401** (auth required; endpoint live) |
+| MCP Streamable HTTP reachable | PASS | `POST /v1/mcp` → **401/403** (auth required; endpoint live) |
 | Skills layout (4 × `SKILL.md`) | PASS | validator |
 
 Run: `python3 scripts/smoke-client-matrix.py`

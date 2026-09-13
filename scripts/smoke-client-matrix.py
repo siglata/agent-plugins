@@ -129,9 +129,10 @@ def check_mcp() -> tuple[bool, str]:
         code = exc.code
     except (urllib.error.URLError, OSError) as exc:
         return False, f"MCP probe failed: {exc}"
-    if code != 401:
-        return False, f"expected unauth 401 from {url}, got {code}"
-    return True, f"{url} → 401 (auth required)"
+    # 401 = OAuth challenge; 403 = edge/WAF still denies anonymous initialize.
+    if code in (401, 403):
+        return True, f"{url} → {code} (auth required)"
+    return False, f"expected unauth 401/403 from {url}, got {code}"
 
 
 def which(cmd: str) -> bool:
