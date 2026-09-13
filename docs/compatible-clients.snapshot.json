@@ -1,0 +1,47 @@
+[
+  {
+    "name": "VS Code",
+    "skills": true,
+    "streamable_http": true
+  },
+  {
+    "name": "Cursor",
+    "skills": true,
+    "streamable_http": true
+  },
+  {
+    "name": "GitHub Copilot",
+    "skills": true,
+    "streamable_http": true
+  },
+  {
+    "name": "ChatGPT & Codex",
+    "skills": true,
+    "streamable_http": true
+  },
+  {
+    "name": "Kiro",
+    "skills": true,
+    "streamable_http": true
+  },
+  {
+    "name": "Hermes Agent",
+    "skills": true,
+    "streamable_http": true
+  },
+  {
+    "name": "OpenClaw",
+    "skills": true,
+    "streamable_http": true
+  },
+  {
+    "name": "Grok Bot",
+    "skills": true,
+    "streamable_http": true
+  },
+  {
+    "name": "NanoClaw",
+    "skills": true,
+    "streamable_http": true
+  }
+]

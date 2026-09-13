@@ -401,7 +401,8 @@ def main(argv: list[str] | None = None) -> int:
         "--schema-dir",
         type=Path,
         default=None,
-        help="Directory to read/write cached schema JSON files",
+        help="Directory to read/write cached schema JSON files "
+        "(default: schemas/1.0.0 when present)",
     )
     args = parser.parse_args(argv)
 
@@ -412,7 +413,13 @@ def main(argv: list[str] | None = None) -> int:
         print(f"FAIL plugin-root ({plugin_root}): path does not exist", file=sys.stderr)
         return 1
 
-    return print_results(run_checks(plugin_root, args.schema_dir))
+    schema_dir = args.schema_dir
+    if schema_dir is None:
+        default_dir = repo_root() / "schemas" / "1.0.0"
+        if (default_dir / "plugin.schema.json").is_file():
+            schema_dir = default_dir
+
+    return print_results(run_checks(plugin_root, schema_dir))
 
 
 if __name__ == "__main__":

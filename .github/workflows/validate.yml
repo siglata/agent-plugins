@@ -16,5 +16,7 @@ jobs:
           python-version: "3.12"
       - name: Install validator dependencies
         run: python -m pip install jsonschema PyYAML
-      - name: Validate plugins/siglata
-        run: python scripts/validate-plugin.py plugins/siglata
+      - name: Validate plugins/siglata (pinned schemas)
+        run: python scripts/validate-plugin.py plugins/siglata --schema-dir schemas/1.0.0
+      - name: Client matrix smoke
+        run: python scripts/smoke-client-matrix.py
