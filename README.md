@@ -21,7 +21,7 @@ Invoke **`siglata`**; it loads the specialists needed for your request.
 
 ## Install in Codex
 
-Run these native Codex commands. No npm is required.
+Codex is a proven v1 client. Run these native Codex commands. No npm is required.
 
 ```sh
 codex plugin marketplace add siglata/agent-plugins
@@ -29,6 +29,8 @@ codex plugin add siglata@siglata-agent-plugins
 ```
 
 Start a new Codex session after installation. Complete Siglata sign-in through the client's OAuth flow when prompted.
+
+Human and agent install guides for Codex and other clients: [Connect Siglata to your agent](https://www.siglata.com/docs/connect).
 
 ## Validate
 
@@ -70,5 +72,7 @@ File and organization operations require a Siglata connection and the appropriat
 ## Other compatible clients
 
 Install `plugins/siglata` from this repository using an [Agent Plugins compatible client](https://agent-plugins.org/compatible-clients) that supports skills and Streamable HTTP MCP. Sign in to Siglata through the client's OAuth flow.
+
+For MCP-only setup without this plugin package, use the Siglata docs hub [Connect Siglata to your agent](https://www.siglata.com/docs/connect). Cursor and Codex are proven for v1. ChatGPT Desktop, Claude Desktop, and VS Code are listed as installable / spec-compatible.
 
 Install the whole plugin to include its skills and MCP connection configuration. Installing skills alone does not connect the service. Installation and enablement are controlled by each client; Agent Plugins defines the portable package format.
