@@ -14,10 +14,10 @@ plugins/siglata/
     ├── siglata/
     ├── siglata-drive/
     ├── siglata-admin/
-    └── siglata-skills/
+    └── skill-creator/
 ```
 
-Invoke **`siglata`**; it loads the specialists needed for your request.
+Invoke **`siglata`**; it loads the specialists needed for your request. For skill authoring alone, invoke **`skill-creator`**.
 
 `.agents/plugins/marketplace.json` is Codex distribution metadata. It sits outside the portable Agent Plugins v1 package, as in the official example guidance.
 
@@ -60,6 +60,7 @@ Ask for what you want through the `siglata` skill:
 ```text
 Use siglata to find last month's invoices.
 Use siglata to invite Alex as an organization member.
+Use skill-creator to create a skill that summarizes meeting notes.
 Use siglata to create a skill that summarizes meeting notes.
 ```
 
@@ -67,9 +68,9 @@ Use siglata to create a skill that summarizes meeting notes.
 | --- | --- |
 | Find, upload, download, organize, trash, or restore files and folders | `siglata-drive` |
 | Manage members, invitations, organization roles, and file or folder access grants | `siglata-admin` |
-| Create or improve reusable agent skills for any domain | `siglata-skills` |
+| Create or improve reusable agent skills for any domain (Siglata or general) | `skill-creator` |
 
-Mixed requests load all relevant specialists. You do not need to invoke them separately.
+Mixed requests load all relevant specialists. You do not need to invoke them separately. The `siglata` router also loads `skill-creator` when the request is skill authoring.
 
 ## Connections and permissions
 
