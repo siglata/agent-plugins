@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Smoke the Agent Plugins v1 client matrix for plugins/siglata.
+"""Package health smoke for plugins/siglata against compatible-clients.org.
 
-Fetches (or uses a vendored snapshot of) the official compatible-clients list,
-runs package validation against pinned schemas, probes the Streamable HTTP MCP
-endpoint, and prints a per-client status table. Client CLIs that are not
-available in CI are reported as manual — the matrix document records install
-recipes.
+Uses a vendored snapshot of the official compatible-clients list, runs package
+validation against pinned schemas, probes the Streamable HTTP MCP endpoint, and
+prints a per-client status table. This is package health only. It is not product
+v1 proof for every listed client. Human install steps live on
+https://www.siglata.com/docs/connect.
 """
 
 from __future__ import annotations
@@ -171,9 +171,9 @@ def main() -> int:
             continue
 
         if name == "ChatGPT & Codex" and which("codex"):
-            smoke = "CLI available (see docs/client-install-matrix.md for install log)"
+            smoke = "CLI available (package health only)"
         elif name == "OpenClaw" and which("openclaw"):
-            smoke = "CLI available (see docs/client-install-matrix.md for install log)"
+            smoke = "CLI available (package health only)"
         elif name == "Hermes Agent" and which("hermes"):
             smoke = "CLI available; portable path is manual (native plugins differ)"
         else:
