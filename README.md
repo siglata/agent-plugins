@@ -66,7 +66,7 @@ Use siglata to create a skill that summarizes meeting notes.
 | Request | Routed skill |
 | --- | --- |
 | Find, upload, download, organize, trash, or restore files and folders | `siglata-drive` |
-| Manage members, invitations, and organization roles | `siglata-admin` |
+| Manage members, invitations, organization roles, and file or folder access grants | `siglata-admin` |
 | Create or improve reusable agent skills for any domain | `siglata-skills` |
 
 Mixed requests load all relevant specialists. You do not need to invoke them separately.
