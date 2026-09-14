@@ -14,4 +14,4 @@ Follow the [shared workflow](../siglata/SKILL.md#workflow), reusing it if alread
 - Move files into the requested folder. Omit the destination folder only when moving to the root.
 - Use trash for deletion. Permanently purge only when explicitly requested.
 - Trashing a folder does not require it to be empty, and each file inside keeps its own trashed or active state. Trash or restore a file directly when the person asks for that file.
-- For sharing or restricted-object access, use `grants_list`, `grant_create`, and `grant_revoke` via `search` then `execute`. For organization roles, use the [admin skill](../siglata-admin/SKILL.md).
+- For sharing or restricted-object access, use `grants_list`, `grant_create`, and `grant_revoke` via `search` then `execute`. Those ops are object ACL shares, not the OAuth MCP grant. For organization roles or leaving an org, use the [admin skill](../siglata-admin/SKILL.md).

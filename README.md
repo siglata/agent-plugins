@@ -67,7 +67,7 @@ Use siglata to create a skill that summarizes meeting notes.
 | Request | Routed skill |
 | --- | --- |
 | Find, upload, download, organize, trash, or restore files and folders | `siglata-drive` |
-| Manage members, invitations, organization roles, and file or folder access grants | `siglata-admin` |
+| Manage members, invitations, organization roles, leave, and file or folder access grants | `siglata-admin` |
 | Create or improve reusable agent skills for any domain (Siglata or general) | `skill-creator` |
 
 Mixed requests load all relevant specialists. You do not need to invoke them separately. The `siglata` router also loads `skill-creator` when the request is skill authoring.
@@ -78,4 +78,37 @@ File and organization operations require a Siglata connection and the appropriat
 
 - If Siglata tools are missing, enable the plugin and its MCP connection in your client.
 - If authentication expires, reconnect through the client's OAuth flow. Keep credentials in the client.
-- If access is denied, resolve the reported organization, role, or approval requirement.
+- If access is denied, resolve the reported organization, role, tier, or approval requirement.
+
+The MCP server brand is **siglata**. CallScript is the script engine behind `search` / `execute` only.
+
+## Testing access (FDE)
+
+Primary path for a prospective client:
+
+1. Open the dedicated Siglata sign-in / sign-up page. **pt-BR** is the primary locale for that page and new copy in the flow.
+2. Complete free signup (magic link or the page's auth method). No operator ticket is required.
+3. Land in the **testing** tier on the personal or active org (limited scopes and teammates).
+4. Connect MCP via [Connect Siglata to your agent](https://www.siglata.com/docs/connect), then run `principal_get` through `execute`.
+
+Operator upgrade (more teammates or fuller access) is separate. Email is an assist to find an existing tester, not the gate that unblocks first use. From the siglata monorepo:
+
+```sh
+# Preferred assist: resolve email → memberships → upgrade
+vp run enable-mcp-pilot-from-email -- \
+  --stage <stage> \
+  --email partner@acme.com \
+  --status upgraded \
+  --note "Acme FDE upgrade"
+
+# Org id already known
+vp run upsert-mcp-org-access -- \
+  --stage <stage> \
+  --organization-id <organizationId> \
+  --status upgraded \
+  --note "Acme FDE upgrade"
+```
+
+Command names may still say `pilot` until the monorepo renames them. Semantics are upgrade from `testing`, not unlock-from-deny. Tiers are `testing` | `upgraded` | `revoked`.
+
+Consultants leave with app Leave organization or MCP `organization_leave`. Do not invent org-switch on a live grant or post-grant `scopes_update`. Wider scopes need revoke + reconsent.
