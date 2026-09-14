@@ -9,7 +9,7 @@ Read the matching guides:
 
 - For files and folders, read [Siglata Drive](../siglata-drive/SKILL.md).
 - For members, invitations, permissions, and organization administration, read [Siglata Admin](../siglata-admin/SKILL.md).
-- For creating or improving agent skills, read [Siglata Skills](../siglata-skills/SKILL.md).
+- For creating or improving agent skills, read [Skill creator](../skill-creator/SKILL.md).
 
 Read all relevant guides for mixed requests. Reuse guides already loaded. Skill authoring works offline; use the workflow below only for Siglata service operations.
 
