@@ -1,13 +1,13 @@
 ---
 name: siglata
-description: Routes Siglata requests for files, folders, Excel sheet and relation reads, multi-workbook period fill with sheet_write, members, invitations, and organization administration. Also use to create or improve reusable agent skills for any domain.
+description: Routes Siglata requests for files, folders, Excel sheet and relation reads, multi-Excel extract-process-patch with sheet_write, members, invitations, and organization administration. Also use to create or improve reusable agent skills for any domain.
 ---
 
 # Siglata
 
 Read the matching guides:
 
-- For files, folders, Excel (`.xlsx`) sheet or relation extract, and filling one period into an existing workbook, read [Siglata Drive](../siglata-drive/SKILL.md).
+- For files, folders, Excel (`.xlsx`) sheet or relation extract, and multi-workbook fill (extract → process → `sheet_write` patch or export), read [Siglata Drive](../siglata-drive/SKILL.md).
 - For members, invitations, permissions, and organization administration, read [Siglata Admin](../siglata-admin/SKILL.md).
 - For creating or improving agent skills, read [Skill creator](../skill-creator/SKILL.md).
 
