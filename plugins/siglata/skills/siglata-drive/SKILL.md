@@ -42,7 +42,7 @@ Resolve every input workbook `fileId` and the target workbook `fileId` (`files_l
 
 ### 2. Scout each layout
 
-Call `sheet_list` and `sheet_read` on the inputs. When layouts match, scout one file and reuse the same `sheet`, A1 `range`, `headerRow`, and `columns` on every later section (swap only `workbookFileId`). When layouts differ, treat each shape as its own format: scout that file and build a different section shape (same `relationName` is fine). Do not force one section shape across mismatched workbooks.
+Call `sheet_list` and `sheet_read` on the inputs. When layouts match, scout one file and reuse the same `sheet`, A1 `range`, `headerRow`, and `columns` on every later section (swap only `workbookFileId`). When layouts differ, treat each shape as its own format: scout that file and build a different section shape (same `relationName` is fine). Do not force one section shape across mismatched workbooks. Reusing Layout A `columns[].header` binds on Layout B yields section error `header_mismatch`. For pt-BR sheets, bind the trimmed header text exactly, for example `columns: [{ header: "Quantidade", field: "units" }, { header: "Região", field: "region" }]` on a `Vendas` sheet. Do not translate headers.
 
 ### 3. Relation extract across those shapes
 
@@ -50,7 +50,7 @@ Call `relation_extract` with one section per input table (up to 32 per call). Sp
 
 ### 4. Process in CallScript
 
-Reduce in CallScript JavaScript over those outcomes (or over paged `relation_query` rows). Build the dense `cells` matrix the OUT window needs. Do not use `relation_query` for cross-file `SUM`, `GROUP BY`, or joins. It filters, projects, orders, and pages one persisted section only.
+Reduce in CallScript JavaScript over those outcomes (or over paged `relation_query` rows). Build the dense `cells` matrix the OUT window needs. CallScript rejects unbounded `while`, `for..of` over `rows`, and reassignment. Prefer fixed-index sums (or a bounded `Promise.all` tool fan-out). Do not use `relation_query` for cross-file `SUM`, `GROUP BY`, or joins. It filters, projects, orders, and pages one persisted section only.
 
 ### 5. Patch the existing OUT workbook (or chain editions)
 
