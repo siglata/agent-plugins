@@ -82,33 +82,13 @@ File and organization operations require a Siglata connection and the appropriat
 
 The MCP server brand is **siglata**. CallScript is the script engine behind `search` / `execute` only.
 
-## Testing access (FDE)
-
-Primary path for a prospective client:
+## Testing access
 
 1. Open the dedicated Siglata sign-in / sign-up page. **pt-BR** is the primary locale for that page and new copy in the flow.
 2. Complete free signup (magic link or the page's auth method). No operator ticket is required.
 3. Land in the **testing** tier on the personal or active org (limited scopes and teammates).
 4. Connect MCP via [Connect Siglata to your agent](https://www.siglata.com/docs/connect), then run `principal_get` through `execute`.
 
-Operator upgrade (more teammates or fuller access) is separate. Email is an assist to find an existing tester, not the gate that unblocks first use. From the siglata monorepo:
-
-```sh
-# Preferred assist: resolve email → memberships → upgrade
-vp run enable-mcp-pilot-from-email -- \
-  --stage <stage> \
-  --email partner@acme.com \
-  --status upgraded \
-  --note "Acme FDE upgrade"
-
-# Org id already known
-vp run upsert-mcp-org-access -- \
-  --stage <stage> \
-  --organization-id <organizationId> \
-  --status upgraded \
-  --note "Acme FDE upgrade"
-```
-
-Command names may still say `pilot` until the monorepo renames them. Semantics are upgrade from `testing`, not unlock-from-deny. Tiers are `testing` | `upgraded` | `revoked`.
+Need more teammates or fuller access? Contact Siglata for an operator upgrade. That path is separate from first use. Maintainer runbooks live in the private siglata monorepo and project store, not in this public repo.
 
 Consultants leave with app Leave organization or MCP `organization_leave`. Do not invent org-switch on a live grant or post-grant `scopes_update`. Wider scopes need revoke + reconsent.
