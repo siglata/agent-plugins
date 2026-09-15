@@ -30,7 +30,7 @@ Discover exact arguments with `search`. Run the steps in one `execute` script wh
 
 ## Multi-Excel fill (extract → process → patch or export)
 
-Use this when the person wants results from several different `.xlsx` inputs written into one existing output workbook (or downloaded as that edition). The common case is filling one period while other months stay intact. The same loop covers any bounded A1 patch into an existing OUT workbook.
+Use this when the person wants results from several different `.xlsx` inputs written into one existing output workbook (or downloaded as that edition). The common case is filling one period while other months stay intact. The same loop covers one or more A1 patches into an existing OUT workbook.
 
 Keep uploads and downloads on the blob path above. Do not download sources to parse them locally. Do not assume DuckDB or SQL aggregation. Do not invent a second write op. `sheet_write` is the patch path. Prefer one `execute` script for extract, reduce, and write when those steps share values.
 
@@ -52,12 +52,16 @@ Call `relation_extract` with one section per input table (up to 32 per call). Sp
 
 Reduce in CallScript JavaScript over those outcomes (or over paged `relation_query` rows). Build the dense `cells` matrix the OUT window needs. CallScript rejects unbounded `while`, `for..of` over `rows`, and reassignment. Prefer fixed-index sums (or a bounded `Promise.all` tool fan-out). Do not use `relation_query` for cross-file `SUM`, `GROUP BY`, or joins. It filters, projects, orders, and pages one persisted section only.
 
-### 5. Patch the existing OUT workbook (or chain editions)
+### 5. Patch the existing OUT workbook
 
-Scout the target with `sheet_read` to locate the A1 window you will change (for period fill, only that month's rectangle). Call `sheet_write` on that existing target `fileId` with that one range and a dense `cells` matrix. `sheet_write` patches that rectangle, leaves every cell outside the window unchanged (other months stay), and mints a new edition. The source `fileId` stays unchanged. Later reads and download use the write result's `file.id`. When the target period is non-contiguous, chain `sheet_write` on successive edition ids (one A1 range per call).
+Scout the target with `sheet_read` to locate each A1 window you will change (for period fill, only that month's rectangles). Call `sheet_write` once on that existing target `fileId` with a non-empty `patches` array. Each entry is `{ sheet, range, cells }` with a dense `cells` matrix for that range. Multi-sheet and non-contiguous ranges belong in the same call. A one-range period fill is a one-element `patches` array.
+
+`sheet_write` patches every listed range, leaves every cell outside those windows unchanged (other months stay), and mints one new edition. The source `fileId` stays unchanged. Later reads and download use `written.file.id`. The receipt is `written.patches[n]` in input order.
+
+Do not chain editions as the default for multi-range or multi-tab fill. Chaining successive edition ids is rare recovery only, not the fill recipe.
 
 ### 6. Verify and export
 
-Verify with `sheet_read` on the edition for the patched range and for at least one untouched neighbor range when the OUT already held other periods. Then `file_download` the edition when the person needs the file.
+Verify with `sheet_read` on the edition for each patched range and for at least one untouched neighbor range when the OUT already held other periods. Then `file_download` the edition when the person needs the file.
 
 Patch windows that hit formula cells fail. OCR is out of scope.
