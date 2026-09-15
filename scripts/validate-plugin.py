@@ -359,11 +359,65 @@ def check_package_boundary(ctx: Ctx) -> list[Check]:
     return checks
 
 
+# Public docs must not publish operator unlock/upgrade CLI runbooks.
+PUBLIC_DOC_FORBIDDEN_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
+    ("enable-mcp-pilot-from-email", re.compile(r"enable-mcp-pilot-from-email")),
+    ("upsert-mcp-org-access", re.compile(r"upsert-mcp-org-access")),
+    ("vp-run-enable-mcp", re.compile(r"vp\s+run\s+enable-mcp")),
+    ("vp-run-upsert-mcp", re.compile(r"vp\s+run\s+upsert-mcp")),
+    ("stage-flag-placeholder", re.compile(r"--stage\s+<stage>")),
+    ("fde-readme-heading", re.compile(r"Testing access\s*\(FDE\)")),
+]
+
+
+def public_markdown_paths(plugin_root: Path) -> list[Path]:
+    root = repo_root()
+    paths: list[Path] = []
+    readme = root / "README.md"
+    if readme.is_file():
+        paths.append(readme)
+    paths.extend(sorted(plugin_root.rglob("*.md")))
+    return paths
+
+
+def check_public_docs_hygiene(ctx: Ctx) -> list[Check]:
+    checks: list[Check] = []
+    for path in public_markdown_paths(ctx.plugin_root):
+        display = display_path(path, ctx.plugin_root)
+        text = path.read_text(encoding="utf-8")
+        hits = [label for label, pattern in PUBLIC_DOC_FORBIDDEN_PATTERNS if pattern.search(text)]
+        check_id = f"public-docs-hygiene-{path.name}"
+        if hits:
+            checks.append(
+                Check(
+                    check_id,
+                    display,
+                    False,
+                    "forbidden public operator runbook pattern(s): " + ", ".join(hits),
+                )
+            )
+        else:
+            checks.append(
+                Check(check_id, display, True, "no public operator unlock/upgrade CLI runbook")
+            )
+    if not checks:
+        checks.append(
+            Check(
+                "public-docs-hygiene",
+                display_path(ctx.plugin_root, ctx.plugin_root),
+                True,
+                "no public markdown scanned",
+            )
+        )
+    return checks
+
+
 CHECKS: list[CheckFn] = [
     check_plugin_manifest,
     check_mcp,
     check_skills,
     check_package_boundary,
+    check_public_docs_hygiene,
 ]
 
 
