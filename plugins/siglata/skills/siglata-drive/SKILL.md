@@ -30,15 +30,15 @@ Discover exact arguments with `search`. Run the steps in one `execute` script wh
 
 ## Many inputs to one period in an existing workbook
 
-Use this when the person has several source workbooks and one target workbook that already holds other months or periods. Keep uploads and downloads on the blob path above. Do not download sources to parse them locally. Do not assume DuckDB or SQL aggregation.
+Use this when the person asks to fill this month (or period) into a workbook that already has other months. Keep uploads and downloads on the blob path above. Do not download sources to parse them locally. Do not assume DuckDB or SQL aggregation. Do not invent a second write op. `sheet_write` is the patch path.
 
 Needs `files:read` for scout, extract, and verify reads. Needs `files:write` for upload and `sheet_write`. If `search` does not mount write ops, report the scope gap and stop.
 
-1. Resolve every input workbook `fileId` and the target workbook `fileId` (`files_list` / `file_get`, or `file_write` / `upload_*` for new files). Keep the target as the workbook that already contains other periods.
+1. Resolve every input workbook `fileId` and the target workbook `fileId` (`files_list` / `file_get`, or `file_write` / `upload_*` for new files). The target is the existing out workbook that already contains other periods.
 2. Scout with `sheet_list` and `sheet_read`. When layouts match, scout one file and reuse the same `sheet`, A1 `range`, `headerRow`, and `columns` on every later section (swap only `workbookFileId`). When layouts differ, scout each layout and use a different section shape.
 3. Call `relation_extract` with one section per input (up to 32 per call). Read rows from the extract outcomes in the same script. Use `persist: true` only when you will call `relation_query` later.
 4. Aggregate in CallScript JavaScript over those outcomes (or over paged `relation_query` rows). Do not use `relation_query` for cross-file `SUM`, `GROUP BY`, or joins. It filters, projects, orders, and pages one persisted section only.
-5. Scout the target period cells with `sheet_read` so you know the A1 window for this month only. Call `sheet_write` (or a newer sheet patch op if `search` lists one) with that range and a dense `cells` matrix. Leave every other period's cells out of the patch. `sheet_write` mints a new edition. The source `fileId` stays unchanged. Later reads and download use the write result's `file.id`.
+5. Scout the target with `sheet_read` to locate this month's A1 window only. Call `sheet_write` on that existing target `fileId` with that one range and a dense `cells` matrix. `sheet_write` patches that rectangle, leaves every cell outside the window unchanged (other months stay), and mints a new edition. The source `fileId` stays unchanged. Later reads and download use the write result's `file.id`.
 6. Verify with `sheet_read` on that edition for the patched range and for at least one untouched period range. Then `file_download` the edition when the person needs the file.
 
 Patch windows that hit formula cells fail. Word, PDF, and PowerPoint have no structured write ops. Prefer one `execute` script for extract, reduce, and write when those steps share values.
