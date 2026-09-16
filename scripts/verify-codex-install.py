@@ -43,6 +43,26 @@ def ok(msg: str) -> None:
     print(f"PASS {msg}")
 
 
+def plugin_list_status(list_stdout: str, plugin_ref: str) -> str | None:
+    """Return Codex STATUS for plugin_ref, or None if the row is missing.
+
+    Codex prints ``installed, enabled`` or ``not installed``. Matching the
+    substring ``installed`` alone is wrong because ``not installed`` contains it.
+    """
+    for line in list_stdout.splitlines():
+        if not line.startswith(plugin_ref):
+            continue
+        rest = line[len(plugin_ref) :].strip()
+        if rest.startswith("not installed"):
+            return "not installed"
+        if rest.startswith("installed, enabled") or rest.startswith("installed,enabled"):
+            return "installed, enabled"
+        if rest.startswith("installed"):
+            return "installed"
+        return rest.split()[0] if rest else None
+    return None
+
+
 def main() -> int:
     codex = shutil.which("codex")
     if not codex:
@@ -67,22 +87,22 @@ def main() -> int:
     plugins = run([codex, "plugin", "list"])
     if plugins.returncode != 0:
         fail(f"plugin list: {plugins.stderr.strip()}")
-    if PLUGIN_REF not in plugins.stdout or "installed" not in plugins.stdout:
+    status = plugin_list_status(plugins.stdout, PLUGIN_REF)
+    if status != "installed, enabled":
         add_plugin = run([codex, "plugin", "add", PLUGIN_REF])
         if add_plugin.returncode != 0:
             fail(
                 f"plugin add: {add_plugin.stderr.strip() or add_plugin.stdout.strip()}"
             )
         plugins = run([codex, "plugin", "list"])
-        if PLUGIN_REF not in plugins.stdout:
-            fail("plugin add did not list siglata@siglata-agent-plugins")
+        status = plugin_list_status(plugins.stdout, PLUGIN_REF)
+        if status != "installed, enabled":
+            fail(
+                f"plugin add left status {status!r}; want 'installed, enabled'"
+            )
         ok(f"plugin add {PLUGIN_REF}")
     else:
-        ok(f"plugin {PLUGIN_REF} installed")
-
-    if "enabled" not in plugins.stdout:
-        fail("plugin listed but not enabled")
-    ok("plugin enabled")
+        ok(f"plugin {PLUGIN_REF} installed, enabled")
 
     mcp = run([codex, "mcp", "list"])
     if mcp.returncode != 0:
