@@ -1,6 +1,6 @@
 ---
 name: siglata-drive
-description: Manages Siglata Drive files and folders, including multi-workbook Excel fill (heterogeneous .xlsx extract, CallScript reduce, sheet_write patch or export). Use for finding, uploading, downloading, organizing, deleting, or restoring files, and for reading or writing tables on stored workbooks without treating xlsx as download-first.
+description: Manages Siglata Drive files and folders, including multi-workbook Excel fill (heterogeneous .xlsx extract, CallScript or sql_query reduce, sheet_write patch or export) and read-only document extracts for .docx, PDF, and .pptx. Use for finding, uploading, downloading, organizing, deleting, or restoring files, and for reading or writing tables on stored workbooks without treating xlsx as download-first.
 ---
 
 # Siglata Drive
@@ -23,16 +23,22 @@ Do not use `file_read` or download when the person wants sheet contents or tabul
 1. Resolve the workbook `fileId` (upload or `files_list` / `file_get`).
 2. Call `sheet_list({ fileId })` to name worksheets.
 3. Call `sheet_read({ fileId, sheet, range })` with an A1 range (for example `A1:D50`) to inspect headers and shape. Prefer a bounded range. Check `truncated`.
-4. Call `relation_extract` with one or more named sections. Each section needs `id`, `relationName`, and `source` (`workbookFileId`, `sheet`, `range`, `headerRow`). Optional `columns` map header text to field names and `typeHint`. Set `persist: true` when the person will query the table later.
-5. Call `relation_query` only after a successful persist. Select with `relationName` or `sectionKey`. Use `where`, `columns`, `orderBy`, `cursor`, and `limit` as needed. The workbook is not reopened.
+4. Call `relation_extract` with one or more named sections. Each section needs `id`, `relationName`, and `source` (`workbookFileId`, `sheet`, `range`, `headerRow`). Optional `columns` map header text to field names and `typeHint`. Set `persist: true` when the person will query the table later. Persist writes each table into `rel_<org>` for `sql_query`.
+5. After persist, query with `sql_query` over `rel_<org>` tables.
+6. Call `relation_list` to rediscover persisted relations and attached sheets across sessions.
+7. Call `attach_workbook` when the person wants whole-workbook SQL rather than named sections. It materializes every sheet as `a_<fileId>_…` tables in `rel_<org>`.
 
 Discover exact arguments with `search`. Run the steps in one `execute` script when later steps need earlier results. Non-xlsx files fail sheet and relation ops. Legacy `.xls`, ODS, and CSV are not workbook ops.
+
+## Document extracts
+
+For stored `.docx`, use `doc_list` / `doc_read`. For PDF, use `pdf_list` / `pdf_read`. For `.pptx`, use `ppt_list` / `ppt_read`. These return server-side text, not document bytes. They are read-only. There is no template fill for Word, PDF, or PowerPoint. Discover exact arguments with `search`.
 
 ## Multi-Excel fill (extract → process → patch or export)
 
 Use this when the person wants results from several different `.xlsx` inputs written into one existing output workbook (or downloaded as that edition). The common case is filling one period while other months stay intact. The same loop covers one or more A1 patches into an existing OUT workbook.
 
-Keep uploads and downloads on the blob path above. Do not download sources to parse them locally. Do not assume DuckDB or SQL aggregation. Do not invent a second write op. `sheet_write` is the patch path. Prefer one `execute` script for extract, reduce, and write when those steps share values.
+Keep uploads and downloads on the blob path above. Do not download sources to parse them locally. Reduce in CallScript JavaScript or with `sql_query` over persisted or attached `rel_<org>` tables. Do not invent a second write op. `sheet_write` is the patch path. Prefer one `execute` script for extract, reduce, and write when those steps share values.
 
 Needs `files:read` for scout, extract, and verify reads. Needs `files:write` for upload and `sheet_write`. If `search` does not mount write ops, report the scope gap and stop.
 
@@ -46,11 +52,11 @@ Call `sheet_list` and `sheet_read` on the inputs. When layouts match, scout one 
 
 ### 3. Relation extract across those shapes
 
-Call `relation_extract` with one section per input table (up to 32 per call). Split into more calls when you need more than 32 sections. Read rows from the extract outcomes in the same script. Use `persist: true` only when you will call `relation_query` later. Sheet and relation ops accept `.xlsx` only. Legacy `.xls`, ODS, and CSV fail. Word, PDF, and PowerPoint have document read ops, not `relation_extract`, and have no structured write ops.
+Call `relation_extract` with one section per input table (up to 32 per call). Split into more calls when you need more than 32 sections. Read rows from the extract outcomes in the same script. Use `persist: true` when you will call `sql_query` later. Sheet and relation ops accept `.xlsx` only. Legacy `.xls`, ODS, and CSV fail. Word, PDF, and PowerPoint have document read ops, not `relation_extract`, and have no structured write ops.
 
 ### 4. Process in CallScript
 
-Reduce in CallScript JavaScript over those outcomes (or over paged `relation_query` rows). Build the dense `cells` matrix the OUT window needs. CallScript rejects unbounded `while`, `for..of` over `rows`, and reassignment. Prefer fixed-index sums (or a bounded `Promise.all` tool fan-out). Do not use `relation_query` for cross-file `SUM`, `GROUP BY`, or joins. It filters, projects, orders, and pages one persisted section only.
+Reduce in CallScript JavaScript over those outcomes, or with `sql_query` for `SUM` / `GROUP BY` / joins across persisted or attached `rel_<org>` tables. Build the dense `cells` matrix the OUT window needs. CallScript rejects unbounded `while`, `for..of` over `rows`, and reassignment. Prefer fixed-index sums (or a bounded `Promise.all` tool fan-out). Use `relation_list` when you need to rediscover table names across sessions.
 
 ### 5. Patch the existing OUT workbook
 
