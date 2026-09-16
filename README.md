@@ -30,7 +30,27 @@ codex plugin marketplace add siglata/agent-plugins
 codex plugin add siglata@siglata-agent-plugins
 ```
 
-Start a new Codex session after installation. Complete Siglata sign-in through the client's OAuth flow when prompted.
+Start a new Codex session after installation. Confirm `codex plugin list` shows `siglata@siglata-agent-plugins` as installed and enabled, and `codex mcp list` shows `siglata` at `https://www.siglata.com/v1/mcp`.
+
+### Authenticate MCP
+
+Interactive (browser callback on `127.0.0.1`):
+
+```sh
+# Testing-tier orgs only allow read management scopes. Pass them explicitly.
+codex mcp login siglata --scopes "openid,profile,email,offline_access,organizations:read,members:read,files:read"
+```
+
+Headless (Cloud Agent / CI). Mint a Siglata MCP access token with the device grant, export it, then point Codex at the env var:
+
+```sh
+export SIGLATA_MCP_TOKEN=...   # device-grant or auth-code access token
+codex mcp add siglata --url https://www.siglata.com/v1/mcp --bearer-token-env-var SIGLATA_MCP_TOKEN
+# or, after the plugin already registered siglata, add the same keys under
+# [mcp_servers.siglata] in ~/.codex/config.toml
+```
+
+`codex mcp list` should show Auth `Bearer token` for `siglata`. A successful `tools/list` returns exactly `execute` and `search`.
 
 Human and agent install guides for Cursor, Codex, and other clients: [Connect Siglata to your agent](https://www.siglata.com/docs/connect).
 
@@ -49,6 +69,22 @@ Package health smoke (not a multi-client v1 proof):
 
 ```sh
 python3 scripts/smoke-client-matrix.py
+```
+
+Real Codex CLI install check (requires `codex` on `PATH`):
+
+```sh
+python3 scripts/verify-codex-install.py
+# optional authenticated tools/list:
+# SIGLATA_MCP_TOKEN=... python3 scripts/verify-codex-install.py
+```
+
+`/poteto-mode` is not part of this plugin pack. It ships in the Siglata checkout under `.agents/skills/poteto-mode/`. Codex auto-lists project skills from that directory when your cwd is the checkout. Outside the checkout, install into `$CODEX_HOME/skills` with the Codex skill-installer:
+
+```sh
+python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py \
+  --repo siglata/siglata --path .agents/skills/poteto-mode --ref main
+python3 scripts/verify-codex-poteto.py
 ```
 
 Schemas are pinned under `schemas/1.0.0/` for offline validation; the smoke script compares them to live URLs when network is available.
