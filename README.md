@@ -79,6 +79,14 @@ python3 scripts/verify-codex-install.py
 # SIGLATA_MCP_TOKEN=... python3 scripts/verify-codex-install.py
 ```
 
+`/poteto-mode` is not part of this plugin pack. It ships in the Siglata checkout under `.agents/skills/poteto-mode/`. Codex auto-lists project skills from that directory when your cwd is the checkout. Outside the checkout, install into `$CODEX_HOME/skills` with the Codex skill-installer:
+
+```sh
+python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py \
+  --repo siglata/siglata --path .agents/skills/poteto-mode --ref main
+python3 scripts/verify-codex-poteto.py
+```
+
 Schemas are pinned under `schemas/1.0.0/` for offline validation; the smoke script compares them to live URLs when network is available.
 
 ## Use Siglata
